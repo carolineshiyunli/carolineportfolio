@@ -1,0 +1,3141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>李诗韵 - 创意/文案 · 个人主页</title>
+<style>
+  /* ===================== FONTS ===================== */
+  @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+  /* ===================== RESET & BASE ===================== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --win-bg: #008080;
+    --win-face: #c0c0c0;
+    --win-highlight: #ffffff;
+    --win-shadow: #808080;
+    --win-dark: #404040;
+    --win-black: #000000;
+    --win-blue: #000080;
+    --win-title-active: #000080;
+    --win-title-inactive: #808080;
+    --win-title-text: #ffffff;
+    --btn-face: #c0c0c0;
+    --accent: #000080;
+    --font-sys: "MS Sans Serif", "Segoe UI", Tahoma, Arial, sans-serif;
+    --font-pixel: "VT323", "Courier New", monospace;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: var(--font-sys);
+    font-size: 11px;
+    background: #000;
+    user-select: none;
+  }
+
+  /* ===================== BOOT SCREEN ===================== */
+  #boot-screen {
+    position: fixed; inset: 0;
+    background: #000;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 9999;
+    color: #c0c0c0;
+  }
+  #boot-screen .boot-logo {
+    font-family: var(--font-pixel);
+    font-size: 48px;
+    color: #fff;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0 #000080;
+  }
+  #boot-screen .boot-sub {
+    font-family: var(--font-pixel);
+    font-size: 20px;
+    color: #808080;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+  }
+  #boot-screen .boot-bar-wrap {
+    width: 300px;
+    border: 2px inset #c0c0c0;
+    height: 20px;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+  }
+  #boot-bar {
+    height: 100%;
+    width: 0%;
+    background: #000080;
+    transition: width 0.1s linear;
+    display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 4px;
+  }
+  #boot-screen .boot-msg {
+    font-family: var(--font-pixel);
+    font-size: 14px;
+    color: #808080;
+    margin-top: 12px;
+    height: 18px;
+  }
+
+  /* ===================== DESKTOP ===================== */
+  #desktop {
+    position: fixed; inset: 0 0 28px 0;
+    background: #3A9DDE;
+    overflow: hidden;
+    display: none;
+  }
+
+  /* Subtle scanline texture */
+  #desktop::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(0,0,0,0.03) 1px,
+      rgba(0,0,0,0.03) 2px
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* ===================== TASKBAR ===================== */
+  #taskbar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 28px;
+    background: var(--win-face);
+    border-top: 2px solid var(--win-highlight);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 4px;
+    z-index: 5000;
+    display: none;
+  }
+
+  #start-menu {
+    z-index: 6000;
+  }
+
+  #context-menu {
+    z-index: 9000;
+  }
+
+  .win95-window {
+    z-index: 100;
+  }
+  .win95-window.active {
+    z-index: 200;
+  }
+
+  #start-btn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 2px 6px;
+    font-weight: bold;
+    font-size: 11px;
+    cursor: pointer;
+    border: 2px outset var(--win-face);
+    background: var(--win-face);
+    min-width: 54px;
+    height: 22px;
+    white-space: nowrap;
+  }
+  #start-btn:active { border-style: inset; }
+  #start-btn .win-logo {
+    width: 16px; height: 16px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  }
+  #start-btn .win-logo span {
+    display: block;
+  }
+  #start-btn .win-logo span:nth-child(1) { background: #ff0000; }
+  #start-btn .win-logo span:nth-child(2) { background: #00aa00; }
+  #start-btn .win-logo span:nth-child(3) { background: #0000cc; }
+  #start-btn .win-logo span:nth-child(4) { background: #ffaa00; }
+
+  #taskbar-clock {
+    margin-left: auto;
+    border: 2px inset var(--win-face);
+    padding: 2px 8px;
+    font-size: 11px;
+    min-width: 60px;
+    text-align: center;
+    height: 22px;
+    display: flex; align-items: center;
+  }
+
+  #taskbar-buttons {
+    display: flex; gap: 2px; flex: 1; overflow: hidden;
+    padding: 0 4px;
+  }
+
+  .taskbar-btn {
+    border: 2px outset var(--win-face);
+    background: var(--win-face);
+    padding: 1px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    height: 22px;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .taskbar-btn.active { border-style: inset; font-weight: bold; }
+  .taskbar-btn:hover { background: #d0d0d0; }
+
+  /* ===================== START MENU ===================== */
+  #start-menu {
+    position: fixed;
+    bottom: 28px; left: 0;
+    width: 200px;
+    background: var(--win-face);
+    border: 2px outset var(--win-face);
+    z-index: 6000;
+    display: none;
+  }
+  #start-menu .sm-header {
+    background: var(--win-blue);
+    color: #fff;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 18px;
+    font-weight: bold;
+    padding: 8px 4px;
+    letter-spacing: 3px;
+    font-family: var(--font-pixel);
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 26px;
+  }
+  #start-menu .sm-items {
+    margin-left: 26px;
+  }
+  #start-menu .sm-item {
+    padding: 5px 10px 5px 8px;
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer;
+    font-size: 11px;
+  }
+  #start-menu .sm-item:hover {
+    background: var(--win-blue);
+    color: #fff;
+  }
+  #start-menu .sm-item .sm-icon { font-size: 16px; width: 20px; text-align: center; }
+  #start-menu .sm-sep {
+    height: 1px;
+    background: var(--win-shadow);
+    margin: 2px 4px;
+    box-shadow: 0 1px 0 var(--win-highlight);
+  }
+
+  /* ===================== DESKTOP ICONS ===================== */
+  .desk-icon {
+    position: absolute;
+    width: 72px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px;
+    padding: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    z-index: 10;
+  }
+  .desk-icon:hover { background: rgba(0,0,128,0.3); border-color: rgba(255,255,255,0.5); }
+  .desk-icon.selected { background: rgba(0,0,128,0.5); border-color: rgba(255,255,255,0.7); }
+  .desk-icon .icon-img {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    image-rendering: pixelated;
+  }
+  .desk-icon .icon-label {
+    color: #fff;
+    font-size: 11px;
+    text-align: center;
+    text-shadow: 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000;
+    line-height: 1.2;
+    word-break: break-all;
+  }
+
+  /* ===================== WINDOWS ===================== */
+  .win95-window {
+    position: absolute;
+    background: var(--win-face);
+    border: 2px outset var(--win-face);
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    min-width: 280px;
+    min-height: 120px;
+    display: flex; flex-direction: column;
+  }
+
+  .win-titlebar {
+    background: var(--win-title-active);
+    display: flex; align-items: center;
+    padding: 2px 4px;
+    gap: 4px;
+    cursor: move;
+    flex-shrink: 0;
+  }
+  .win95-window:not(.active) .win-titlebar {
+    background: var(--win-title-inactive);
+  }
+  .win-title-icon { font-size: 14px; }
+  .win-title-text {
+    color: var(--win-title-text);
+    font-size: 11px;
+    font-weight: bold;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .win-btn-group { display: flex; gap: 2px; }
+  .win-btn {
+    width: 16px; height: 14px;
+    background: var(--btn-face);
+    border: 2px outset var(--win-face);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    cursor: pointer;
+    font-family: "Marlett", "Wingdings", sans-serif;
+    line-height: 1;
+    padding-bottom: 1px;
+    flex-shrink: 0;
+  }
+  .win-btn:active { border-style: inset; }
+  .win-btn:hover { background: #d0d0d0; }
+  .win-btn.close:hover { background: #ff4444; color: #fff; }
+
+  .win-menubar {
+    display: flex;
+    background: var(--win-face);
+    padding: 1px 2px;
+    border-bottom: 1px solid var(--win-shadow);
+    flex-shrink: 0;
+  }
+  .win-menubar span {
+    padding: 1px 6px;
+    cursor: default;
+    font-size: 11px;
+  }
+  .win-menubar span:hover {
+    background: var(--win-blue);
+    color: #fff;
+  }
+
+  .win-toolbar {
+    display: flex; gap: 2px; align-items: center;
+    padding: 2px 4px;
+    border-bottom: 1px solid var(--win-shadow);
+    background: var(--win-face);
+    flex-shrink: 0;
+  }
+  .win-toolbar-btn {
+    border: 2px outset var(--win-face);
+    background: var(--win-face);
+    width: 24px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .win-toolbar-btn:active { border-style: inset; }
+  .win-toolbar-sep {
+    width: 1px; height: 20px;
+    background: var(--win-shadow);
+    margin: 0 2px;
+    box-shadow: 1px 0 0 var(--win-highlight);
+  }
+
+  .win-content {
+    flex: 1;
+    overflow: auto;
+    padding: 8px;
+    background: #fff;
+    border: 2px inset var(--win-face);
+    margin: 0 2px 2px 2px;
+  }
+  .win-content.no-bg {
+    background: var(--win-face);
+  }
+  .win-content.file-view {
+    background: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 4px;
+    padding: 8px;
+  }
+
+  .win-statusbar {
+    height: 20px;
+    border-top: 1px solid var(--win-shadow);
+    display: flex; align-items: center;
+    padding: 0 4px;
+    font-size: 10px;
+    color: #444;
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  .win-statusbar .sb-panel {
+    border: 1px inset var(--win-face);
+    padding: 0 4px;
+    height: 16px;
+    display: flex; align-items: center;
+  }
+
+  /* ===================== FILE ICONS (inside windows) ===================== */
+  .file-icon {
+    width: 76px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px;
+    padding: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .file-icon:hover { background: rgba(0,0,128,0.15); border-color: rgba(0,0,128,0.4); }
+  .file-icon.selected { background: rgba(0,0,128,0.25); border-color: rgba(0,0,128,0.6); }
+  .file-icon .fi-img { font-size: 32px; }
+  .file-icon .fi-label {
+    font-size: 11px; text-align: center;
+    line-height: 1.2; color: #000;
+    word-break: break-word;
+  }
+
+  /* ===================== SCROLLBAR STYLE ===================== */
+  .win-content::-webkit-scrollbar { width: 16px; }
+  .win-content::-webkit-scrollbar-track {
+    background: var(--win-face);
+    border-left: 1px solid var(--win-shadow);
+  }
+  .win-content::-webkit-scrollbar-thumb {
+    background: var(--win-face);
+    border: 2px outset var(--win-face);
+  }
+  .win-content::-webkit-scrollbar-thumb:hover { background: #b0b0b0; }
+  .win-content::-webkit-scrollbar-button {
+    background: var(--win-face);
+    border: 2px outset var(--win-face);
+    height: 16px;
+  }
+
+  /* ===================== CONTENT STYLES ===================== */
+  .about-content { font-size: 12px; line-height: 1.8; color: #000; }
+  .about-content h2 { font-size: 14px; color: var(--win-blue); margin: 12px 0 6px; border-bottom: 1px solid #c0c0c0; padding-bottom: 2px; }
+  .about-content p { margin-bottom: 8px; }
+  .about-content .tag {
+    display: inline-block;
+    background: var(--win-blue);
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 6px;
+    margin: 2px 2px 2px 0;
+  }
+  .about-content ul { padding-left: 20px; margin-bottom: 8px; }
+  .about-content li { margin-bottom: 4px; }
+
+  .project-content { font-size: 12px; line-height: 1.8; color: #000; }
+  .project-content h2 { font-size: 15px; color: var(--win-blue); margin-bottom: 8px; }
+  .project-content h3 { font-size: 12px; color: #000; margin: 10px 0 4px; font-weight: bold; background: #c0c0c0; padding: 2px 6px; }
+  .project-content p { margin-bottom: 6px; }
+  .project-content .highlight {
+    background: #ffffc0;
+    border-left: 3px solid #ffcc00;
+    padding: 4px 8px;
+    margin: 8px 0;
+    font-size: 11px;
+  }
+  .project-content .result {
+    background: #e0ffe0;
+    border-left: 3px solid #008000;
+    padding: 4px 8px;
+    margin: 8px 0;
+    font-size: 11px;
+  }
+  .project-content ul { padding-left: 20px; margin-bottom: 8px; }
+  .project-content li { margin-bottom: 4px; }
+
+  .resume-content { font-size: 11px; line-height: 1.7; color: #000; font-family: "Courier New", monospace; }
+  .resume-content h2 { font-size: 13px; background: var(--win-blue); color: #fff; padding: 2px 6px; margin: 10px 0 4px; }
+  .resume-content .job { margin-bottom: 12px; }
+  .resume-content .job-title { font-weight: bold; }
+  .resume-content .job-meta { color: #666; font-size: 10px; }
+  .resume-content ul { padding-left: 18px; margin: 4px 0; }
+
+  /* Notepad style */
+  .notepad-content {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #000;
+    white-space: pre-wrap;
+    background: #fff;
+  }
+
+  /* ===================== RESIZE HANDLE ===================== */
+  .win-resize {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 12px; height: 12px;
+    cursor: se-resize;
+    background: var(--win-face);
+  }
+  .win-resize::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; right: 2px;
+    width: 8px; height: 8px;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--win-shadow) 0px, var(--win-shadow) 1px,
+      transparent 1px, transparent 3px
+    );
+  }
+
+  /* ===================== CONTEXT MENU ===================== */
+  #context-menu {
+    position: fixed;
+    background: var(--win-face);
+    border: 2px outset var(--win-face);
+    z-index: 9000;
+    display: none;
+    min-width: 140px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  #context-menu .ctx-item {
+    padding: 4px 20px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  #context-menu .ctx-item:hover { background: var(--win-blue); color: #fff; }
+  #context-menu .ctx-sep { height: 1px; background: var(--win-shadow); margin: 2px 4px; box-shadow: 0 1px 0 var(--win-highlight); }
+
+  /* ===================== DIALOG ===================== */
+  .win-dialog {
+    position: fixed;
+    background: var(--win-face);
+    border: 2px outset var(--win-face);
+    z-index: 8000;
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.5);
+    padding-bottom: 12px;
+  }
+  .dialog-body { padding: 16px 20px; font-size: 12px; line-height: 1.6; display: flex; gap: 12px; align-items: flex-start; }
+  .dialog-icon { font-size: 32px; flex-shrink: 0; }
+  .dialog-text { flex: 1; }
+  .dialog-btns { display: flex; justify-content: center; gap: 8px; padding: 0 16px; }
+  .dialog-btn {
+    border: 2px outset var(--win-face);
+    background: var(--win-face);
+    padding: 3px 20px;
+    font-size: 11px;
+    cursor: pointer;
+    min-width: 70px;
+  }
+  .dialog-btn:active { border-style: inset; }
+
+  /* ===================== BSOD ===================== */
+  #bsod {
+    position: fixed; inset: 0;
+    background: #000080;
+    color: #fff;
+    font-family: var(--font-pixel);
+    font-size: 20px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 40px;
+    line-height: 1.8;
+    text-align: center;
+  }
+
+  /* ===================== MISC ===================== */
+  .blink { animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+  .win95-window.minimized { display: none !important; }
+
+  .address-bar {
+    display: flex; align-items: center; gap: 4px;
+    padding: 2px 4px;
+    border-bottom: 1px solid var(--win-shadow);
+    background: var(--win-face);
+    flex-shrink: 0;
+  }
+  .address-bar label { font-size: 11px; white-space: nowrap; }
+  .address-bar input {
+    flex: 1;
+    border: 2px inset var(--win-face);
+    background: #fff;
+    padding: 1px 4px;
+    font-size: 11px;
+    font-family: var(--font-sys);
+    outline: none;
+    height: 20px;
+  }
+
+  /* progress bar for file operations */
+  .progress-wrap {
+    margin: 8px 0;
+    border: 2px inset var(--win-face);
+    background: #fff;
+    height: 16px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--win-blue) 0px, var(--win-blue) 12px,
+      #4040c0 12px, #4040c0 16px
+    );
+    transition: width 0.3s ease;
+  }
+
+  /* Purple donut icon style */
+  .purple-donut {
+    display: inline-block;
+    filter: sepia(1) saturate(800%) hue-rotate(240deg);
+    image-rendering: -webkit-optimize-contrast;
+  }
+  .purple-donut-large {
+    font-size: 32px;
+    filter: sepia(1) saturate(800%) hue-rotate(240deg);
+    image-rendering: pixelated;
+  }
+  .purple-donut-title {
+    filter: sepia(1) saturate(800%) hue-rotate(240deg);
+  }
+
+  /* Attachment section styles */
+  .attachment-section {
+    margin-top: 12px;
+    padding: 8px;
+    border: 2px inset var(--win-face);
+    background: #fff;
+  }
+  .attachment-section h4 {
+    font-size: 11px;
+    color: var(--win-blue);
+    margin-bottom: 6px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid #c0c0c0;
+  }
+  .attachment-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .attachment-item {
+    width: 100px;
+    border: 1px solid #c0c0c0;
+    padding: 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .attachment-item:hover {
+    background: #f0f0f0;
+    border-color: var(--win-blue);
+  }
+  .attachment-item img {
+    width: 100%;
+    height: 70px;
+    object-fit: cover;
+    border: 1px solid #c0c0c0;
+    margin-bottom: 4px;
+    background: #e0e0e0;
+  }
+  .attachment-item .att-label {
+    font-size: 10px;
+    color: #444;
+    word-break: break-all;
+  }
+  .attachment-placeholder {
+    font-size: 10px;
+    color: #888;
+    padding: 4px;
+    border: 1px dashed #c0c0c0;
+    text-align: center;
+  }
+
+  /* Video player styles */
+  .video-player-section {
+    margin-top: 8px;
+  }
+  .video-main-view {
+    width: 100%;
+    height: 200px;
+    background: #000;
+    border: 2px inset var(--win-face);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 11px;
+    position: relative;
+    overflow: hidden;
+  }
+  .video-main-view .play-icon {
+    font-size: 48px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .video-main-view .play-icon:hover {
+    color: #fff;
+  }
+  .video-main-view .video-placeholder-text {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    color: #666;
+    font-size: 10px;
+  }
+  .video-progress {
+    height: 4px;
+    background: #333;
+    margin-top: 4px;
+    border: 1px solid #555;
+  }
+  .video-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--win-blue);
+  }
+  .video-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    padding: 4px;
+    background: var(--win-face);
+    border: 2px inset var(--win-face);
+  }
+  .video-controls .vc-btn {
+    border: 2px outset var(--win-face);
+    background: var(--win-face);
+    padding: 2px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    min-width: 30px;
+  }
+  .video-controls .vc-btn:active {
+    border-style: inset;
+  }
+  .video-controls .vc-time {
+    font-size: 10px;
+    color: #444;
+    margin-left: auto;
+  }
+  .video-thumbnails {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .video-thumb {
+    flex: 1;
+    border: 2px outset var(--win-face);
+    padding: 2px;
+    cursor: pointer;
+    background: var(--win-face);
+  }
+  .video-thumb:hover {
+    border-color: var(--win-blue);
+  }
+  .video-thumb.selected {
+    border-color: var(--win-blue);
+    background: #e0e0ff;
+  }
+  .video-thumb .thumb-preview {
+    width: 100%;
+    height: 50px;
+    background: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 16px;
+  }
+  .video-thumb .thumb-label {
+    font-size: 9px;
+    padding: 2px;
+    text-align: center;
+    color: #444;
+  }
+  .script-section {
+    margin-top: 12px;
+    padding: 8px;
+    border: 2px inset var(--win-face);
+    background: #fff;
+  }
+  .script-section h4 {
+    font-size: 11px;
+    color: var(--win-blue);
+    margin-bottom: 6px;
+  }
+  .script-preview {
+    width: 100%;
+    height: 80px;
+    background: #f5f5f5;
+    border: 1px dashed #c0c0c0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 11px;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .script-preview:hover {
+    background: #eee;
+  }
+
+  /* PDF Viewer styles */
+  .pdf-viewer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #e8e8e8;
+    font-family: var(--font-sys);
+  }
+  .pdf-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: #c0c0c0;
+    border-bottom: 1px solid #808080;
+    flex-shrink: 0;
+  }
+  .pdf-toolbar .pdf-tb-label {
+    font-size: 11px;
+    color: #444;
+    margin-right: 4px;
+  }
+  .pdf-toolbar .pdf-page-info {
+    font-size: 11px;
+    color: #444;
+    margin-left: auto;
+    border: 1px inset #c0c0c0;
+    padding: 1px 6px;
+    background: #fff;
+  }
+  .pdf-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  .pdf-thumbnails {
+    width: 90px;
+    background: #d0d0d0;
+    border-right: 1px solid #808080;
+    overflow-y: auto;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .pdf-thumb {
+    border: 2px outset #c0c0c0;
+    background: #fff;
+    padding: 2px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .pdf-thumb:hover {
+    border-color: #000080;
+  }
+  .pdf-thumb.active {
+    border-color: #000080;
+    background: #e0e0ff;
+  }
+  .pdf-thumb-area {
+    width: 100%;
+    height: 60px;
+    background: #fff;
+    border: 1px dashed #c0c0c0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #aaa;
+  }
+  .pdf-thumb-label {
+    font-size: 9px;
+    color: #666;
+    padding: 2px 0;
+  }
+  .pdf-main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    background: #a0a0a0;
+  }
+  .pdf-page {
+    background: #fff;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 560px;
+  }
+  .pdf-page-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 6px;
+    background: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+    font-size: 10px;
+    color: #666;
+  }
+  .pdf-page-img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #fff;
+    border: 1px dashed #c0c0c0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 11px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .pdf-page-img:hover {
+    background: #f8f8f8;
+    border-color: #000080;
+  }
+  .pdf-page-img .pdf-placeholder {
+    text-align: center;
+    padding: 16px;
+  }
+  .pdf-page-img .pdf-placeholder .pdf-icon {
+    font-size: 32px;
+    margin-bottom: 6px;
+    opacity: 0.4;
+  }
+  .pdf-page-img .pdf-placeholder .pdf-hint {
+    font-size: 10px;
+    color: #999;
+  }
+  .pdf-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px;
+    background: #c0c0c0;
+    border-top: 1px solid #808080;
+    flex-shrink: 0;
+  }
+  .pdf-nav-btn {
+    border: 2px outset #c0c0c0;
+    background: #c0c0c0;
+    padding: 2px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    min-width: 60px;
+  }
+  .pdf-nav-btn:active {
+    border-style: inset;
+  }
+  .pdf-nav-btn:hover {
+    background: #d0d0d0;
+  }
+  .pdf-nav-btn:disabled {
+    color: #888;
+    cursor: default;
+  }
+  .pdf-nav-btn:disabled:hover {
+    background: #c0c0c0;
+  }
+  .pdf-page-count {
+    font-size: 11px;
+    color: #444;
+  }
+  .pdf-section-label {
+    font-size: 10px;
+    color: #666;
+    padding: 2px 6px;
+    background: #f5f5f5;
+    border-left: 2px solid #000080;
+    margin: 4px 0;
+  }
+
+  /* Music Player Styles */
+  .music-player {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--win-face, #c0c0c0);
+    font-family: var(--font-sys, 'MS Sans Serif');
+  }
+  .mp-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    background: var(--win-face, #c0c0c0);
+    border-bottom: 1px solid #808080;
+    flex-shrink: 0;
+  }
+  .mp-tb-btn {
+    width: 18px; height: 16px;
+    border: 2px outset #c0c0c0;
+    background: #c0c0c0;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mp-tb-btn:active { border-style: inset; }
+  .mp-tb-btn.close:hover { background: #ff4444; color: #fff; }
+  .mp-main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  .mp-cover-area {
+    width: 140px;
+    background: #d0d0d0;
+    border-right: 1px solid #808080;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .mp-cover {
+    width: 100px;
+    height: 100px;
+    background: #333;
+    border: 2px inset #c0c0c0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .mp-progress-bar {
+    width: 100%;
+    height: 12px;
+    border: 2px inset #c0c0c0;
+    background: #fff;
+    cursor: pointer;
+    margin-bottom: 4px;
+  }
+  .mp-progress-fill {
+    height: 100%;
+    background: #000080;
+    width: 0%;
+    transition: width 0.3s;
+  }
+  .mp-time-display {
+    font-size: 10px;
+    color: #444;
+    font-family: 'Courier New', monospace;
+  }
+  .mp-playlist {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .mp-playlist-header {
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: bold;
+    background: var(--win-blue, #000080);
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .mp-playlist-body {
+    flex: 1;
+    overflow-y: auto;
+    background: #fff;
+    padding: 4px;
+  }
+  .track-item {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-size: 11px;
+    gap: 6px;
+  }
+  .track-item:hover {
+    background: #e8e8ff;
+    border-color: #000080;
+  }
+  .track-item.playing {
+    background: #000080;
+    color: #fff;
+  }
+  .track-item.playing .track-duration { color: #aaa; }
+  .track-num {
+    font-family: 'Courier New', monospace;
+    color: #888;
+    width: 24px;
+    flex-shrink: 0;
+  }
+  .track-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .track-duration {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: #888;
+  }
+  .mp-playlist-footer {
+    padding: 4px 8px;
+    font-size: 10px;
+    color: #666;
+    background: #f0f0f0;
+    border-top: 1px solid #c0c0c0;
+    flex-shrink: 0;
+  }
+  .mp-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #c0c0c0;
+    border-top: 2px solid #fff;
+    flex-shrink: 0;
+  }
+  .mp-ctrl-btn {
+    font-size: 14px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border: 2px outset #c0c0c0;
+    background: #c0c0c0;
+  }
+  .mp-ctrl-btn:active { border-style: inset; }
+  .mp-play-btn { font-size: 20px; padding: 4px 12px; }
+  .mp-ctrl-volume {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+  }
+  .mp-vol-slider {
+    width: 60px;
+    height: 8px;
+    background: #fff;
+    border: 2px inset #c0c0c0;
+  }
+  .mp-ctrl-info {
+    margin-left: auto;
+    font-size: 11px;
+    color: #444;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* Planning file grid styles */
+  .planning-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--win-face, #c0c0c0);
+  }
+  .planning-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--win-face, #c0c0c0);
+    border-bottom: 1px solid #808080;
+    flex-shrink: 0;
+  }
+  .planning-toolbar-btn {
+    border: 2px outset var(--win-face, #c0c0c0);
+    background: var(--win-face, #c0c0c0);
+    padding: 2px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .planning-toolbar-btn:active { border-style: inset; }
+  .planning-toolbar-btn:hover { background: #d0d0d0; }
+  .planning-body {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+    background: #fff;
+    border: 2px inset var(--win-face, #c0c0c0);
+    margin: 0 4px 4px 4px;
+  }
+
+  /* File grid (large icons view) */
+  .planning-file-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 8px;
+  }
+  .planning-file-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90px;
+    cursor: pointer;
+    padding: 6px;
+    border: 1px solid transparent;
+  }
+  .planning-file-item:hover {
+    background: #e0e0ff;
+    border-color: #000080;
+  }
+  .planning-file-item:active {
+    background: #c0c0ff;
+  }
+  .planning-file-icon {
+    font-size: 48px;
+    margin-bottom: 6px;
+    line-height: 1;
+  }
+  .planning-file-label {
+    font-size: 11px;
+    text-align: center;
+    color: #000;
+    word-break: break-word;
+    line-height: 1.3;
+  }
+
+  /* PDF preview (inline, no download) */
+  .planning-pdf-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .planning-pdf-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: #f0f0f0;
+    border-bottom: 1px solid #c0c0c0;
+    flex-shrink: 0;
+  }
+  .planning-pdf-header .back-btn {
+    border: 2px outset #c0c0c0;
+    background: #c0c0c0;
+    padding: 2px 8px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .planning-pdf-header .back-btn:active { border-style: inset; }
+  .planning-pdf-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #000080;
+    flex: 1;
+  }
+  .planning-pdf-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background: #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .planning-pdf-page {
+    background: #fff;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.25);
+    width: 100%;
+    max-width: 560px;
+  }
+  .planning-pdf-page-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    font-size: 10px;
+    color: #666;
+  }
+  .planning-pdf-page-img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #fff;
+    border: 1px dashed #c0c0c0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #aaa;
+    font-size: 11px;
+    cursor: pointer;
+    gap: 6px;
+  }
+  .planning-pdf-page-img:hover {
+    background: #f8f8f8;
+    border-color: #000080;
+  }
+  .planning-pdf-page-img .pdf-icon { font-size: 28px; opacity: 0.5; }
+  .planning-pdf-page-img .pdf-hint { font-size: 10px; color: #999; }
+  .planning-pdf-page-body {
+    padding: 12px;
+    font-size: 11px;
+    line-height: 1.7;
+    color: #333;
+    background: #fff;
+  }
+  .planning-pdf-page-body h3 {
+    font-size: 14px;
+    color: #000080;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #c0c0c0;
+    padding-bottom: 4px;
+  }
+  .planning-pdf-page-body p {
+    margin-bottom: 8px;
+  }
+  .planning-pdf-page-body ul {
+    padding-left: 18px;
+    margin-bottom: 8px;
+  }
+  .planning-pdf-page-body li {
+    margin-bottom: 4px;
+  }
+  .planning-pdf-watermark {
+    text-align: center;
+    font-size: 10px;
+    color: #ccc;
+    padding: 8px;
+    border-top: 1px solid #eee;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== BOOT SCREEN ===================== -->
+<div id="boot-screen">
+  <div class="boot-logo" id="boot-logo">CAROLINE OS</div>
+  <div class="boot-sub">Creative Edition · 1995</div>
+  <div class="boot-bar-wrap"><div id="boot-bar"></div></div>
+  <div class="boot-msg" id="boot-msg">Starting Windows...</div>
+</div>
+
+<!-- ===================== BSOD ===================== -->
+<div id="bsod">
+  <div style="background:#fff;color:#000080;padding:4px 8px;margin-bottom:20px;font-size:22px;">Windows</div>
+  <div>A fatal exception 0E has occurred at 0028:C0063485 in VxD CREATIVE(01) +</div>
+  <div>00000001. The current application will be terminated.</div>
+  <br>
+  <div>* Press any key to terminate the current application.</div>
+  <div>* Press CTRL+ALT+DEL again to restart your computer. You will</div>
+  <div style="padding-left:24px;">lose any unsaved information in all applications.</div>
+  <br>
+  <div>Press any key to continue <span class="blink">_</span></div>
+</div>
+
+<!-- ===================== DESKTOP ===================== -->
+<div id="desktop" onclick="deselectAllIcons(); hideStartMenu();" oncontextmenu="showContextMenu(event)">
+  <!-- Bliss wallpaper canvas -->
+  <canvas id="bliss-wallpaper" width="1920" height="1080" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;"></canvas>
+  <!-- Icons placed by JS -->
+</div>
+
+<!-- ===================== TASKBAR ===================== -->
+<div id="taskbar">
+  <button id="start-btn" onclick="toggleStartMenu(event)">
+    <div class="win-logo">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    Start
+  </button>
+  <div id="taskbar-buttons"></div>
+  <div id="taskbar-clock">00:00</div>
+</div>
+
+<!-- ===================== START MENU ===================== -->
+<div id="start-menu">
+  <div class="sm-header">Caroline OS</div>
+  <div class="sm-items">
+    <div class="sm-item" onclick="openWindow('about');hideStartMenu()">
+      <span class="sm-icon">👩</span> 关于我
+    </div>
+    <div class="sm-item" onclick="openWindow('projects');hideStartMenu()">
+      <span class="sm-icon">📁</span> 项目文件夹
+    </div>
+    <div class="sm-item" onclick="openWindow('resume');hideStartMenu()">
+      <span class="sm-icon">📑</span> 简历.pdf
+    </div>
+    <div class="sm-item" onclick="openWindow('music');hideStartMenu()">
+      <span class="sm-icon">🎵</span> 音乐作品
+    </div>
+    <div class="sm-item" onclick="openWindow('contact');hideStartMenu()">
+      <span class="sm-icon">📧</span> 联系方式
+    </div>
+    <div class="sm-sep"></div>
+    <div class="sm-item" onclick="showBSOD()">
+      <span class="sm-icon">🔄</span> 重新启动
+    </div>
+    <div class="sm-item" onclick="showShutdownDialog()">
+      <span class="sm-icon">⏻</span> 关闭系统
+    </div>
+  </div>
+</div>
+
+<!-- ===================== CONTEXT MENU ===================== -->
+<div id="context-menu">
+  <div class="ctx-item" onclick="arrangeIcons()">排列图标</div>
+  <div class="ctx-item" onclick="openWindow('about')">关于此电脑</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="openWindow('notepad')">新建文本文件</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="openWindow('properties')">属性</div>
+</div>
+
+<script>
+// ===================== WINDOW MANAGEMENT =====================
+let windowZBase = 100;
+let openWindows = {};
+
+const WINDOW_CONFIGS = {
+  about: {
+    title: "关于我.txt - 记事本",
+    icon: "👩",
+    width: 560, height: 480,
+    x: 80, y: 60,
+    content: buildAboutContent,
+    menubar: ["文件(F)", "编辑(E)", "格式(O)", "帮助(H)"],
+    statusItems: ["就绪", "Ln 1, Col 1"]
+  },
+  projects: {
+    title: "亮点项目",
+    icon: "📁",
+    width: 620, height: 440,
+    x: 160, y: 80,
+    content: buildProjectsFolder,
+    menubar: ["文件(F)", "编辑(E)", "查看(V)", "帮助(H)"],
+    toolbar: true,
+    addressBar: "C:\\Caroline\\亮点项目",
+    statusItems: ["5 个对象"]
+  },
+  resume: {
+    title: "李诗韵_简历.pdf - Adobe Reader",
+    icon: "📄",
+    width: 600, height: 520,
+    x: 120, y: 50,
+    content: buildResumeContent,
+    menubar: ["文件(F)", "编辑(E)", "视图(V)", "插入(I)", "格式(O)", "帮助(H)"],
+    toolbar: true,
+    statusItems: ["第 1 页", "共 1 页", "在 2.5cm"]
+  },
+  music: {
+    title: "音乐作品 - Windows Media Player",
+    icon: "🎵",
+    width: 480, height: 380,
+    x: 200, y: 100,
+    content: buildMusicContent,
+    statusItems: ["已停止"]
+  },
+  contact: {
+    title: "联系方式.txt - 记事本",
+    icon: "📧",
+    width: 400, height: 300,
+    x: 300, y: 150,
+    content: buildContactContent,
+    menubar: ["文件(F)", "编辑(E)", "帮助(H)"],
+    statusItems: ["就绪"]
+  },
+  notepad: {
+    title: "新建 文本文档.txt - 记事本",
+    icon: "📝",
+    width: 400, height: 300,
+    x: 250, y: 180,
+    content: buildNotepadContent,
+    menubar: ["文件(F)", "编辑(E)", "帮助(H)"],
+    statusItems: ["就绪"]
+  },
+  properties: {
+    title: "显示 属性",
+    icon: "🖥️",
+    width: 380, height: 320,
+    x: 280, y: 120,
+    content: buildPropertiesContent,
+    statusItems: []
+  },
+
+  // Project sub-windows
+  proj_db06: {
+    title: "第一三共竞标&执行.txt",
+    icon: "⛸️",
+    width: 580, height: 480,
+    x: 200, y: 80,
+    content: () => buildProjectDetail('db06'),
+    menubar: ["文件(F)", "编辑(E)", "帮助(H)"],
+    statusItems: ["就绪"]
+  },
+  proj_shulizhe: {
+    title: "舒利迭全年长图创意.txt",
+    icon: "donut",
+    width: 580, height: 480,
+    x: 220, y: 100,
+    content: () => buildProjectDetail('shulizhe'),
+    menubar: ["文件(F)", "编辑(E)", "帮助(H)"],
+    statusItems: ["就绪"]
+  },
+  proj_medseeker: {
+    title: "Medseeker推广AI短视频创意.txt",
+    icon: "🐱",
+    width: 580, height: 480,
+    x: 240, y: 120,
+    content: () => buildProjectDetail('medseeker'),
+    menubar: ["文件(F)", "编辑(E)", "帮助(H)"],
+    statusItems: ["就绪"]
+  },
+  proj_planning: {
+    title: "部分策划案",
+    icon: "📊",
+    width: 620, height: 560,
+    x: 260, y: 140,
+    content: () => buildProjectDetail('planning'),
+    statusItems: ["就绪"]
+  },
+  proj_ai: {
+    title: "个人方法论.txt",
+    icon: "🔧",
+    width: 580, height: 480,
+    x: 180, y: 90,
+    content: () => buildProjectDetail('ai'),
+    menubar: ["文件(F)", "编辑(E)", "帮助(H)"],
+    statusItems: ["就绪"]
+  },
+};
+
+function createWindow(id) {
+  const cfg = WINDOW_CONFIGS[id];
+  if (!cfg) return;
+
+  const win = document.createElement('div');
+  win.className = 'win95-window';
+  win.id = 'win-' + id;
+  win.style.cssText = `width:${cfg.width}px;height:${cfg.height}px;left:${cfg.x}px;top:${cfg.y}px;`;
+
+  let html = '';
+
+  // Titlebar
+  const iconHtml = cfg.icon === 'donut' ? donutIcon('purple-donut-title') : cfg.icon;
+  html += `<div class="win-titlebar" onmousedown="startDrag(event,'${id}')">
+    <span class="win-title-icon">${iconHtml}</span>
+    <span class="win-title-text">${cfg.title}</span>
+    <div class="win-btn-group">
+      <div class="win-btn" onclick="minimizeWindow('${id}')" title="最小化">_</div>
+      <div class="win-btn" onclick="maximizeWindow('${id}')" title="最大化">□</div>
+      <div class="win-btn close" onclick="closeWindow('${id}')" title="关闭">✕</div>
+    </div>
+  </div>`;
+
+  // Menubar
+  if (cfg.menubar) {
+    html += `<div class="win-menubar">`;
+    cfg.menubar.forEach(m => html += `<span>${m}</span>`);
+    html += `</div>`;
+  }
+
+  // Toolbar
+  if (cfg.toolbar) {
+    html += `<div class="win-toolbar">
+      <div class="win-toolbar-btn" title="后退">◀</div>
+      <div class="win-toolbar-btn" title="前进">▶</div>
+      <div class="win-toolbar-btn" title="向上">▲</div>
+      <div class="win-toolbar-sep"></div>
+      <div class="win-toolbar-btn" title="剪切">✂</div>
+      <div class="win-toolbar-btn" title="复制">📋</div>
+      <div class="win-toolbar-btn" title="粘贴">📌</div>
+      <div class="win-toolbar-sep"></div>
+      <div class="win-toolbar-btn" title="删除">🗑</div>
+      <div class="win-toolbar-btn" title="属性">ℹ</div>
+    </div>`;
+  }
+
+  // Address bar
+  if (cfg.addressBar) {
+    html += `<div class="address-bar">
+      <label>地址</label>
+      <input type="text" value="${cfg.addressBar}" readonly>
+    </div>`;
+  }
+
+  // Content
+  const contentClass = id === 'projects' ? 'win-content file-view' : 'win-content';
+  html += `<div class="${contentClass}" id="wincontent-${id}"></div>`;
+
+  // Statusbar
+  if (cfg.statusItems && cfg.statusItems.length > 0) {
+    html += `<div class="win-statusbar">`;
+    cfg.statusItems.forEach(s => html += `<div class="sb-panel">${s}</div>`);
+    html += `</div>`;
+  }
+
+  // Resize handle
+  html += `<div class="win-resize" onmousedown="startResize(event,'${id}')"></div>`;
+
+  win.innerHTML = html;
+  win.addEventListener('mousedown', () => focusWindow(id));
+  document.getElementById('desktop').appendChild(win);
+
+  // Fill content
+  const contentEl = document.getElementById('wincontent-' + id);
+  if (contentEl && cfg.content) {
+    contentEl.innerHTML = cfg.content();
+  }
+
+  return win;
+}
+
+function openWindow(id) {
+  hideStartMenu();
+
+  if (openWindows[id]) {
+    const win = document.getElementById('win-' + id);
+    if (win) {
+      win.classList.remove('minimized');
+      focusWindow(id);
+      updateTaskbarBtn(id, false);
+      return;
+    }
+  }
+
+  const win = createWindow(id);
+  if (!win) return;
+
+  openWindows[id] = { minimized: false };
+  focusWindow(id);
+  addTaskbarBtn(id);
+}
+
+function closeWindow(id) {
+  const win = document.getElementById('win-' + id);
+  if (win) win.remove();
+  delete openWindows[id];
+  removeTaskbarBtn(id);
+}
+
+function minimizeWindow(id) {
+  const win = document.getElementById('win-' + id);
+  if (win) {
+    win.classList.add('minimized');
+    openWindows[id].minimized = true;
+    updateTaskbarBtn(id, true);
+  }
+}
+
+let prevSize = {};
+function maximizeWindow(id) {
+  const win = document.getElementById('win-' + id);
+  if (!win) return;
+  if (win.dataset.maximized === '1') {
+    const ps = prevSize[id];
+    if (ps) {
+      win.style.width = ps.w; win.style.height = ps.h;
+      win.style.left = ps.l; win.style.top = ps.t;
+    }
+    win.dataset.maximized = '0';
+  } else {
+    prevSize[id] = { w: win.style.width, h: win.style.height, l: win.style.left, t: win.style.top };
+    win.style.width = '100%'; win.style.height = '100%';
+    win.style.left = '0'; win.style.top = '0';
+    win.dataset.maximized = '1';
+  }
+}
+
+function focusWindow(id) {
+  document.querySelectorAll('.win95-window').forEach(w => w.classList.remove('active'));
+  const win = document.getElementById('win-' + id);
+  if (win) {
+    win.style.zIndex = ++windowZBase;
+    win.classList.add('active');
+  }
+  document.querySelectorAll('.taskbar-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('tbtn-' + id);
+  if (btn) btn.classList.add('active');
+}
+
+// ===================== TASKBAR =====================
+function addTaskbarBtn(id) {
+  const cfg = WINDOW_CONFIGS[id];
+  if (!cfg) return;
+  const btnIcon = cfg.icon === 'donut' ? '🍩' : cfg.icon;
+  const btn = document.createElement('button');
+  btn.className = 'taskbar-btn';
+  btn.id = 'tbtn-' + id;
+  btn.innerHTML = btnIcon + ' ' + cfg.title.split(' - ')[0].substring(0, 20);
+  btn.onclick = () => {
+    const win = document.getElementById('win-' + id);
+    if (!win) return;
+    if (win.classList.contains('minimized')) {
+      win.classList.remove('minimized');
+      openWindows[id].minimized = false;
+      focusWindow(id);
+      updateTaskbarBtn(id, false);
+    } else {
+      minimizeWindow(id);
+    }
+  };
+  document.getElementById('taskbar-buttons').appendChild(btn);
+}
+
+function removeTaskbarBtn(id) {
+  const btn = document.getElementById('tbtn-' + id);
+  if (btn) btn.remove();
+}
+
+function updateTaskbarBtn(id, minimized) {
+  const btn = document.getElementById('tbtn-' + id);
+  if (btn) {
+    btn.classList.toggle('active', !minimized);
+  }
+}
+
+// ===================== DRAG =====================
+let dragState = null;
+
+function startDrag(e, id) {
+  if (e.target.classList.contains('win-btn')) return;
+  const win = document.getElementById('win-' + id);
+  if (!win || win.dataset.maximized === '1') return;
+  focusWindow(id);
+  const rect = win.getBoundingClientRect();
+  dragState = { id, startX: e.clientX, startY: e.clientY, origX: rect.left, origY: rect.top };
+  e.preventDefault();
+}
+
+document.addEventListener('mousemove', e => {
+  if (dragState) {
+    const win = document.getElementById('win-' + dragState.id);
+    if (win) {
+      win.style.left = (dragState.origX + e.clientX - dragState.startX) + 'px';
+      win.style.top = Math.max(0, dragState.origY + e.clientY - dragState.startY) + 'px';
+    }
+  }
+  if (resizeState) {
+    const win = document.getElementById('win-' + resizeState.id);
+    if (win) {
+      win.style.width = Math.max(280, resizeState.origW + e.clientX - resizeState.startX) + 'px';
+      win.style.height = Math.max(120, resizeState.origH + e.clientY - resizeState.startY) + 'px';
+    }
+  }
+});
+
+document.addEventListener('mouseup', () => { dragState = null; resizeState = null; });
+
+// ===================== RESIZE =====================
+let resizeState = null;
+function startResize(e, id) {
+  const win = document.getElementById('win-' + id);
+  if (!win) return;
+  const rect = win.getBoundingClientRect();
+  resizeState = { id, startX: e.clientX, startY: e.clientY, origW: rect.width, origH: rect.height };
+  e.preventDefault(); e.stopPropagation();
+}
+
+// ===================== CLOCK =====================
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('taskbar-clock').textContent = h + ':' + m;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ===================== START MENU =====================
+function toggleStartMenu(e) {
+  e.stopPropagation();
+  const sm = document.getElementById('start-menu');
+  sm.style.display = sm.style.display === 'block' ? 'none' : 'block';
+}
+function hideStartMenu() {
+  document.getElementById('start-menu').style.display = 'none';
+}
+
+// ===================== CONTEXT MENU =====================
+function showContextMenu(e) {
+  e.preventDefault();
+  const cm = document.getElementById('context-menu');
+  cm.style.display = 'block';
+  cm.style.left = e.clientX + 'px';
+  cm.style.top = e.clientY + 'px';
+}
+document.addEventListener('click', () => {
+  document.getElementById('context-menu').style.display = 'none';
+});
+
+// ===================== ICONS =====================
+function deselectAllIcons() {
+  document.querySelectorAll('.desk-icon').forEach(i => i.classList.remove('selected'));
+}
+
+function arrangeIcons() {
+  document.getElementById('context-menu').style.display = 'none';
+}
+
+const DESK_ICONS = [
+  { id: 'about',    icon: '👩', label: '关于我.txt',     x: 20,  y: 20 },
+  { id: 'projects', icon: '📁', label: '亮点项目',       x: 20,  y: 110 },
+  { id: 'resume',   icon: '📑', label: '简历.pdf',       x: 20,  y: 200 },
+  { id: 'music',    icon: '🎵', label: '音乐作品',       x: 20,  y: 290 },
+  { id: 'contact',  icon: '📧', label: '联系方式.txt',   x: 20,  y: 380 },
+];
+
+function buildDesktopIcons() {
+  const desktop = document.getElementById('desktop');
+  DESK_ICONS.forEach(ic => {
+    const el = document.createElement('div');
+    el.className = 'desk-icon';
+    el.style.cssText = `left:${ic.x}px;top:${ic.y}px;`;
+    el.innerHTML = `<div class="icon-img">${ic.icon}</div><div class="icon-label">${ic.label}</div>`;
+    el.addEventListener('click', e => { e.stopPropagation(); deselectAllIcons(); el.classList.add('selected'); });
+    el.addEventListener('dblclick', e => { e.stopPropagation(); openWindow(ic.id); });
+    desktop.appendChild(el);
+  });
+}
+
+// ===================== ICON HELPERS =====================
+function donutIcon(cls) {
+  return `<span class="${cls || 'purple-donut'}">🍩</span>`;
+}
+
+// ===================== CONTENT BUILDERS =====================
+
+function buildAboutContent() {
+  return `<div class="notepad-content">
+<pre style="font-family:'Courier New',monospace;font-size:12px;line-height:1.7;white-space:pre-wrap;">
+============================================
+  关于我 · About Me
+  李诗韵 · Caroline Li
+  创意/文案 | 广告营销
+============================================
+
+你好，我是李诗韵。
+
+我是一个在行业里摸爬滚打了6年的广告人，现在是创意文案。
+我不是那种只等Brief的人——
+我更擅长在客户没完全想好前
+通过询问沟通，以及站在对方的角度上，
+帮助客户梳理清楚需要怎么做以及如何能执行的人。
+
+▌教育背景
+──────────────────────────────────
+  · 辽宁师范大学 广告学 本科
+  · RMIT皇家墨尔本理工大学 广告学 硕士
+
+▌从业时间线
+──────────────────────────────────
+  2020 → 进入蓝色光标，快消品事业部，客户执行。
+  2023 → 医疗行业，AM转型策划。同年开始接触AI，
+         如Midjourney等新AI工具接入工作。
+  2024 → 独立创意顾问，汽车、互联网行业策略比稿，独立交付。
+  2025 → 医脉通创意综合部，深耕医疗行业，深耕AI工具为工作提效。
+         比如AI生成主视觉直接在比稿中中标
+         （礼来爱优特、第一三共DB06）。
+  2025 → 探索AI短视频方向：
+         含提示词脚本 → 指导后期抽卡剪辑。
+
+▌服务过的客户
+──────────────────────────────────
+  快消：伊利、强生、达能、中粮、脉动
+  互联网：京东（大商超/个护/买药/快递）
+  汽车：大众集团PR、长安汽车
+  医疗：礼来、GSK、辉瑞、罗氏、拜耳
+        第一三共、赫力昂...
+
+▌我不只是一个广告人
+──────────────────────────────────
+  · 音乐创作人（持有3份音乐著作权证书）
+  · 吉他演奏
+  · 10年+摄影经历
+  · 小说创作积累
+
+▌证书（近两年）
+──────────────────────────────────
+  · 工信部 AI人工智能训练技术（初级）证书
+  · 国家版权局 音乐作品著作权登记证书 ×3
+
+============================================
+</pre>
+</div>`;
+}
+
+function buildProjectsFolder() {
+  const projects = [
+    { id: 'proj_db06',      icon: '⛸️', label: '第一三共\n竞标&执行' },
+    { id: 'proj_shulizhe',  icon: 'donut', label: '舒利迭\n全年长图创意' },
+    { id: 'proj_medseeker', icon: '🐱', label: 'Medseeker\nAI短视频' },
+    { id: 'proj_planning',  icon: '📊', label: '部分\n策划案' },
+    { id: 'proj_ai',        icon: '🔧', label: '个人\n方法论' },
+  ];
+  return projects.map(p => {
+    const iconHtml = p.icon === 'donut' ? donutIcon('purple-donut-large') : p.icon;
+    return `
+    <div class="file-icon" ondblclick="openWindow('${p.id}')">
+      <div class="fi-img">${iconHtml}</div>
+      <div class="fi-label">${p.label.replace('\n','<br>')}</div>
+    </div>
+  `}).join('');
+}
+
+function buildProjectDetail(key) {
+  const data = {
+    db06: {
+      title: "第一三共 DB06 · 竞标&执行",
+      icon: "⛸️",
+      idea: `▌项目背景
+──────────────────────────────────────────────────
+第一三共优赫得产品DB06研究需要一套面向医生的虚拟病例互动H5，
+用于提升医生对HER2低表达乳腺癌的诊断与处方认知。
+客户原始需求：模拟病例，形式和创意均由我方主导。
+
+▌创意挑战
+──────────────────────────────────────────────────
+第一轮提案：航海概念 → 客户否决
+（原因：客户已有一套舞者概念的视觉创意，
+模拟病例的创意概念最好有一定的延续感和关联度）
+
+第二轮重新出发，找到新颖的、契合的、
+同时不落俗套的切入点。
+
+▌核心创意
+──────────────────────────────────────────────────
+「花样滑冰」
+
+为什么是花样滑冰？
+  · 花样滑冰是奥林匹克赛事，背后是运动员日复一日的精进与突破
+  · DB06研究背后，研究者穷尽毕生探索疾病未知边界
+  · 医者面对患者，同样是一场永无止境的精准诊疗修炼
+  · 三者精神内核高度契合
+
+同时借势冬奥会节点，时机吻合。
+
+▌创意落地
+──────────────────────────────────────────────────
+创意slogan：「与赫共5，精准落刃」
+
+前半句为客户既定，后半句结合新的花滑创意概念
+和靶向精准的药物特点完善，从而产出确定此slogan。
+
+「落刃」是花样滑冰的专业动作，
+每一刃落地，都是无数次训练后的精准控制，
+完美契合DB06「精准靶向」的治疗理念。
+
+▌执行亮点
+──────────────────────────────────────────────────
+1、创意概念客户满意，推进执行中继续完善了故事线，
+   并最终完成系列H5内容的执行。
+2、使用Midjourney生成花样滑冰主题KV，放入竞标方案。
+   最终出街KV：零修改，直接采用竞标版本。
+   AI生成图从创意概念到最终交付，实现完整闭环。
+
+▌我的价值
+──────────────────────────────────────────────────
+  · 在创意新的概念时，从客户角度出发，
+    创建 reasonable & solid 的创意概念。
+  · 第一轮被否后，快速找到更精准的情感锚点；
+    从修改重写到成案用了3天时间，并取得结果。
+  · 用AI工具直接出成果物，同时也协助了设计提升效率。
+  · 竞标 → 出街，AI生成图零修改直接落地。
+
+▌附件预览
+──────────────────────────────────────────────────
+  📎 db06-proposal.pdf（完整竞标方案）
+  🖼️ db06-KV.jpg（花样滑冰KV高清图）
+`,
+    },
+    shulizhe: {
+      title: "舒利迭 · 全年长图创意",
+      icon: "donut",
+      tags: ["医疗", "微信长图", "视觉创意", "全年执行"],
+      brief: "负责GSK旗下哮喘用药舒利迭投放医脉通精准产品「e信使」。负责全年微信长图内容的创意策划与视觉指导。根据过审后的医学稿件内容，每期尽量都给到了新颖的与之前不一样的视觉形式，全年共20期。",
+      insight: "对于客户审美喜好以及品牌调性的洞察，整体以品牌色为主，客户偏好插画风格、简约高级感的设计样式（提升医生受众的阅读观感体验），首屏在有吸引力且能点明主题的程度上要求不宜过长，需快速进入正式内容。",
+      idea: `视觉切入策略：找生活场景/季节性节点/患者人群特征，如果这些抓手都没有，则思考当下时兴的视觉样式（或艺术家风格）或提炼一些抽象概念的视觉元素。
+
+难点：
+  · 续订后，现在整体连续做了30期，挑战在于既往的创意很难复用
+  · 每期都要想新的小花招，避免客户审美疲劳
+  · 抽象的、不好提炼的视觉主题，需要时间精力思考&找参考
+  · 为提升设计效率，现在我用豆包生成10张以上的素材包供给设计直接排版（或微调后排版）`,
+      result: "全年20期内容按时高质交付，客户满意度持续稳定。直接助力客户2026年成功续约，是创意执行可靠性的直接验证。",
+      reflection: "内容运营最考验的不是爆款思维，而是持续输出的稳定性。一年20期，每期都是一张答卷。",
+      attachments: [
+        { name: '长图01', file: 'shulidie-01.jpg' },
+        { name: '长图02', file: 'shulidie-02.jpg' },
+        { name: '长图03', file: 'shulidie-03.jpg' },
+        { name: '长图04', file: 'shulidie-04.jpg' }
+      ]
+    },
+    medseeker: {
+      title: "Medseeker · AI短视频创意",
+      icon: "🐱",
+      tags: ["AI医疗", "AI短视频", "品牌认知"],
+      brief: "医脉通全新的AI产品Medseeker是一款面向医生的医疗行业搜索工具，搭在AI agent，为医生提供专业的医学内容回答。需要通过短视频内容吸引医生注意力，介绍产品特征、使用场景，引流医生使用新产品建立对产品的专业感认知与信赖。",
+      insight: "有谁会拒绝看一只可爱的打工咪vlog呢？",
+      idea: `创意方向：Dr.蓝猫（公司已注册美术作品版权登记） × 医疗场景的AI短视频
+
+借鉴近期网络流行的打工咪vlog短视频形式。
+
+推进过程：
+  · 完成Dr.蓝猫的IP形象基础设定，并通过豆包完成角色三视图、表情包等系列角色固定形象打造
+  · 给AI提供创意灵感和脚本撰写方向，直接让豆包以提示词的格式生成画面描述
+  · 将画面提示词先生成静态场景做测试、微调，稳定后给到后期去用seedance抽卡，对后期制作的成片进行审核并沟通调整直至定版发布。`,
+      result: "视频获得内部领导认可，视频号发布转评赞数量与其他类型内容相比较高。从创意概念确定到脚本定稿仅用三天，AI辅助的视觉方向为后续制作节省了大量沟通成本，同时IP形象成为公司固定资产沉淀。",
+      reflection: "医疗AI创意边界需精细把控——形象要有人格但不能娱乐化，信息要清晰但不能变成产品说明书。",
+      attachments: [
+        { name: '短视频01', file: 'medseeker-01.m4v', type: 'video' },
+        { name: '短视频02', file: 'medseeker-02.m4v', type: 'video' },
+        { name: '短视频03', file: 'medseeker03.m4v', type: 'video' },
+        { name: '短视频04', file: 'medseeker-04.m4v', type: 'video' }
+      ],
+      scriptFile: 'medseeker-script.pdf'
+    },
+    planning: {
+      title: "部分策划案 · 京东 & 礼来",
+      icon: "📊",
+      tags: ["策略", "互联网", "医疗", "比稿"],
+      brief: "策划能力的一次集中展示：京东策略方向与礼来品牌栏目规划，两个行业、两种打法，但底层逻辑一致——找到那个能生长出无数内容的核心比喻。",
+      insight: "好的策划方向，不是给出一个答案，而是给出一个可以不断生长的种子。种子选对了，后面的执行才能有生命力和延展性。",
+      idea: `【京东 × 统一创意方向：「幸福的小城」】
+
+为什么是「小城」？
+  · 大城市的焦虑感 vs. 小城市的松弛感
+  · 反向切入：京东不只是效率工具，更是生活质感的提供者
+  · 每个业务板块对应小城生活的不同面向：
+    - 大商超 → 小城菜市场的烟火气
+    - 个护    → 小城女生的精致日常
+    - 买药    → 小城邻居的关心与信任
+    - 快递    → 小城邮递员的温度
+
+板块差异化执行：
+  ┌───────────────────────────────────────────┐
+  │ 板块  │ 核心词  │ 创意切入点              │
+  ├───────┼─────────┼─────────────────────────┤
+  │ 商超  │ 放心    │ 老妈放心让你买菜        │
+  │ 个护  │ 懂我    │ 小城女生也有大牌梦      │
+  │ 买药  │ 安心    │ 深夜急需，像邻居一样快  │
+  │ 快递  │ 准时    │ 比你妈更准时            │
+  └───────────────────────────────────────────┘
+
+---
+
+【礼来爱优特 × 品牌栏目策划：「大音希声」】
+
+核心概念：
+  · 为特应性皮炎（AD）患者打造一个「被听见」的品牌空间
+  · 不做功效宣传，做情感连接
+  · 每期内容围绕一个患者的「沉默故事」展开
+
+内容架构：
+  ┌─────────────────────────────────┐
+  │  先导视频  │  建立品牌情感基调  │
+  │  系列长图  │  患者故事深度呈现  │
+  │  社交传播  │  UGC话题发酵      │
+  └─────────────────────────────────┘
+
+先导视频脚本关键帧：
+  · 开场：安静的诊室，患者反复挠手臂
+  · 中段：字幕诗化处理患者独白
+  · 结尾：「有些痛，终于可以被听见」`,
+      result: "两个策划案均完成从策略到成案的独立全流程交付。京东策略方向为后续多业务板块执行提供了清晰的创意锚点，礼来方案最终完整落地执行。",
+      reflection: "好的策略方向是可以生长的——一个「小城」的比喻，一个「大音希声」的概念，都能生长出无数执行方向，这才是真正有生命力的Big Idea。",
+      attachments: [
+        { name: '方案01', file: 'planning-01.pdf' },
+        { name: '方案02', file: 'planning-02.pdf' },
+        { name: '方案03', file: 'planning-03.pdf' },
+        { name: '方案04', file: 'planning-04.pdf' }
+      ]
+    },
+    ai: {
+      title: "个人方法论 · AI创意工具链",
+      icon: "🔧",
+      tags: ["AI工具", "创意方法论", "Midjourney", "工作流"],
+      brief: "这不是一个项目，这是一套个人工作思路。记录了我从2023年开始探索AI创意工具的完整路径，以及如何把AI嵌入到日常创意工作的每一个环节。",
+      insight: "需求说得越清晰，AI的质量效率就越高！",
+      idea: `我的AI创意工作链
+
+阶段一：AI生图（2023年 - ）
+工具：Midjourney
+用法：
+  · KV概念视觉生成（提示词工程是核心）
+  · 故事板快速出图（提升设计效率）
+  · 比稿视觉示意（低成本验证创意方向）
+
+核心技能：提示词工程
+我的提示词框架：
+[画面主体] + [风格参考] + [色调] + [技术参数]
+例：花样滑冰选手，赛博朋克冰蓝色光感，背景为溜冰场，
+一束追光灯照亮人物，明暗对比强烈，超写实摄影风格，
+8K超清，电影光，胶片质感 --ar 16:9 --v 6 --style raw
+
+阶段二：AI短视频创意（2024年 - ）
+工具：AI视频生成工具 + 剪辑
+我的工作流：
+  1. 创意概念确定
+  2. 撰写含提示词的AI分镜脚本
+     （每个镜头 = 一段提示词 + 时长 + 情绪）
+  3. 提交给后期团队按脚本抽卡
+  4. 筛选素材 + 剪辑成片
+  5. 创意到成片，执行效率提升
+
+海报文案产出：更快，AI更擅长，
+只需要梳理清楚客户的使用目的、使用场景和大概想要的调性方向，
+就能让AI产出好文案（优先chatgpt 5.4）。
+
+已验证案例：
+  · 第一三共DB06：AI生成KV直接中标（零修改）
+  · 多个比稿项目：AI辅助故事板节省30%+时间`,
+      result: "AI工具链已成为我日常创意工作的核心组成部分，显著提升了从创意到交付的全链路质量&效率。",
+      reflection: "AI是放大创意的工具，而不是替代创意的工具。你得先有足够策略思考+符合客户需求的创意判断力，AI才会变得有价值。"
+    }
+  };
+
+  const d = data[key];
+  if (!d) return '<p>内容加载失败</p>';
+
+  // Special layout for medseeker - video player style
+  if (key === 'medseeker') {
+    return buildMedseekerContent(d);
+  }
+
+  // Special layout for planning - PDF viewer style
+  if (key === 'planning') {
+    return buildPlanningContent();
+  }
+
+  // Build content sections dynamically - only render non-empty fields
+  let sections = '';
+
+  if (d.tags && d.tags.length) {
+    sections += '\n标签：' + d.tags.map(t => '['+t+']').join(' ') + '\n';
+  }
+  if (d.brief) {
+    sections += '\n▌项目背景\n──────────────────────────────────────────────────\n' + d.brief + '\n';
+  }
+  if (d.insight) {
+    sections += '\n▌洞察\n──────────────────────────────────────────────────\n' + d.insight + '\n';
+  }
+  if (d.idea) {
+    sections += '\n▌创意方案\n──────────────────────────────────────────────────\n' + d.idea + '\n';
+  }
+  if (d.result) {
+    sections += '\n▌结果\n──────────────────────────────────────────────────\n✅ ' + d.result + '\n';
+  }
+  if (d.reflection) {
+    sections += '\n▌复盘\n──────────────────────────────────────────────────\n💡 ' + d.reflection + '\n';
+  }
+
+  // Get icon HTML
+  const iconDisplay = d.icon === 'donut' ? donutIcon('purple-donut') : d.icon;
+
+  // Attachment section - display only, no download/open links
+  let attachmentSection = '';
+  if (d.attachments && d.attachments.length) {
+    const iconMap = { video: '🎬', pdf: '📄', image: '🖼️', audio: '🎵' };
+    const typeIcon = d.attachments[0]?.type ? iconMap[d.attachments[0].type] || '📎' : '📎';
+    attachmentSection = `
+<div class="attachment-section">
+  <h4>${typeIcon} 附件展示</h4>
+  <div class="attachment-grid">
+    ${d.attachments.map((att, i) => `
+    <div class="attachment-item">
+      <div class="attachment-placeholder">${att.name}</div>
+      <div class="att-label">（预览文件）</div>
+    </div>`).join('')}
+  </div>
+</div>`;
+  }
+
+  return `<div class="notepad-content" style="padding:4px;">
+<pre style="font-family:'Courier New',monospace;font-size:11px;line-height:1.7;white-space:pre-wrap;color:#000;">
+╔══════════════════════════════════════════════════╗
+║  ${iconDisplay}  ${d.title}
+╚══════════════════════════════════════════════════╝${sections}
+══════════════════════════════════════════════════
+  李诗韵 · Caroline Li · 创意/文案
+══════════════════════════════════════════════════
+</pre>${attachmentSection}</div>`;
+}
+
+function buildMedseekerContent(d) {
+  const videoFiles = d.attachments ? d.attachments.map((att, i) => ({
+    name: att.name,
+    file: att.file,
+    label: att.name
+  })) : [];
+
+  const scriptFile = d.scriptFile || '';
+  const videoJson = JSON.stringify(videoFiles).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+  return `<div style="padding:4px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:16px;">${d.icon}</span>
+    <span style="font-weight:bold;font-size:13px;color:var(--win-blue);">${d.title}</span>
+  </div>
+
+  <div style="font-size:11px;color:#555;margin-bottom:8px;">
+    标签：${d.tags ? d.tags.map(t => '['+t+']').join(' ') : ''}
+  </div>
+
+  <div style="font-size:11px;line-height:1.6;margin-bottom:8px;padding:6px;background:#f5f5f5;border-left:3px solid #888;">
+    <strong>Brief：</strong>${d.brief}
+  </div>
+
+  <div class="video-player-section">
+    <div style="font-size:11px;font-weight:bold;margin-bottom:4px;color:#444;">▶ 视频作品</div>
+
+    <!-- 内嵌播放器区域 -->
+    <div class="video-main-view" id="ms-player-area">
+      <div id="ms-video-wrap" style="display:none;width:100%;height:100%;position:relative;">
+        <video id="ms-video-el"
+          style="width:100%;height:100%;object-fit:contain;background:#000;"
+          controls
+          controlsList="nodownload nofullscreen"
+          disablePictureInPicture="true"
+          oncontextmenu="return false;"
+        ></video>
+      </div>
+      <div id="ms-player-placeholder">
+        <div class="play-icon" id="ms-play-hint">▶</div>
+        <div class="video-placeholder-text" id="ms-status-text">点击下方视频缩略图播放</div>
+      </div>
+    </div>
+
+    <div class="video-progress" id="ms-progress-bar" style="display:none;">
+      <div class="video-progress-fill" id="ms-progress-fill"></div>
+    </div>
+
+    <div class="video-thumbnails" id="ms-thumbs">
+      ${d.attachments ? d.attachments.map((att, i) => `
+      <div class="video-thumb ${i === 0 ? 'selected' : ''}" onclick="msLoadVideo(${i}, this)">
+        <div class="thumb-preview">▶</div>
+        <div class="thumb-label">${att.name}</div>
+      </div>`).join('') : `
+      <div class="video-thumb selected">
+        <div class="thumb-preview">▶</div>
+        <div class="thumb-label">视频01</div>
+      </div>`}
+    </div>
+  </div>
+
+  <div class="script-section" id="ms-script-section">
+    <h4>📄 创意脚本 · PDF预览</h4>
+    <div id="ms-script-viewer" style="width:100%;height:120px;border:2px inset #c0c0c0;background:#f8f8f8;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;cursor:pointer;font-size:11px;color:#666;">
+      <div style="font-size:24px;">📄</div>
+      <div id="ms-script-name">点击加载脚本PDF</div>
+    </div>
+  </div>
+
+  <!-- 脚本PDF全屏预览浮层（默认隐藏） -->
+  <div id="ms-script-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;flex-direction:column;" onclick="closeMsScriptModal(event)">
+    <div style="background:#c0c0c0;border:2px outset #c0c0c0;width:90%;max-width:700px;max-height:90vh;display:flex;flex-direction:column;box-shadow:4px 4px 16px rgba(0,0,0,0.5);" onclick="event.stopPropagation()">
+      <div style="display:flex;align-items:center;padding:4px 8px;background:#000080;color:#fff;font-size:11px;font-weight:bold;gap:8px;flex-shrink:0;">
+        <span>📄</span>
+        <span id="ms-script-modal-title" style="flex:1;">创意脚本</span>
+        <button onclick="closeMsScriptModal()" style="border:2px outset #c0c0c0;background:#c0c0c0;padding:2px 8px;cursor:pointer;font-size:11px;">✕ 关闭</button>
+      </div>
+      <div id="ms-script-pdf-body" style="flex:1;overflow-y:auto;padding:16px;background:#e8e8e8;display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div style="background:#fff;width:100%;max-width:560px;padding:16px;border:1px solid #ccc;box-shadow:2px 2px 8px rgba(0,0,0,0.2);">
+          <div style="font-size:12px;color:#666;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:8px;">📎 脚本PDF将在这里显示</div>
+          <div style="text-align:center;padding:24px;color:#999;font-size:11px;">
+            <div style="font-size:32px;margin-bottom:8px;">📄</div>
+            <div id="ms-script-filename-display"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;padding:8px;background:#e8f4e8;border-left:3px solid #080;font-size:11px;">
+    <strong>Insight：</strong>${d.insight}
+  </div>
+
+  <div style="margin-top:8px;padding:8px;background:#fff8e8;border-left:3px solid #f80;font-size:11px;line-height:1.7;">
+    <strong>💡 Idea：</strong>${d.idea.replace(/\n/g, '<br>')}
+  </div>
+
+  <div style="margin-top:8px;padding:8px;background:#e8f8e8;border-left:3px solid #080;font-size:11px;line-height:1.6;">
+    <strong>Result：</strong>${d.result}
+  </div>
+</div>
+<scr`+`ipt>
+(function() {
+  var msVideos = ${videoJson};
+  var msScriptFile = '${scriptFile}';
+  var msCurrentIdx = 0;
+  var msBlobUrl = null;
+  var msScriptBlobUrl = null;
+
+  function loadMsScript() {
+    if (!msScriptFile) {
+      alert('脚本文件路径未配置');
+      return;
+    }
+    var modal = document.getElementById('ms-script-modal');
+    var filenameDisplay = document.getElementById('ms-script-filename-display');
+    var pdfBody = document.getElementById('ms-script-pdf-body');
+    if (filenameDisplay) filenameDisplay.textContent = msScriptFile;
+
+    if (modal) modal.style.display = 'flex';
+  }
+
+  window.closeMsScriptModal = function(e) {
+    if (e && e.target !== e.currentTarget) return;
+    var modal = document.getElementById('ms-script-modal');
+    if (modal) modal.style.display = 'none';
+  };
+
+  var scriptViewer = document.getElementById('ms-script-viewer');
+  if (scriptViewer) {
+    scriptViewer.addEventListener('click', function() {
+      var nameEl = document.getElementById('ms-script-name');
+      if (nameEl && msScriptFile) nameEl.textContent = msScriptFile;
+      loadMsScript();
+    });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeMsScriptModal();
+  });
+
+  window.msLoadVideo = function(idx, el) {
+    document.querySelectorAll('#ms-thumbs .video-thumb').forEach(function(t) {
+      t.classList.remove('selected');
+    });
+    if (el) el.classList.add('selected');
+    msCurrentIdx = idx;
+
+    var statusText = document.getElementById('ms-status-text');
+    var placeholder = document.getElementById('ms-player-placeholder');
+    var playerWrap = document.getElementById('ms-video-wrap');
+    var videoEl = document.getElementById('ms-video-el');
+    var progressBar = document.getElementById('ms-progress-bar');
+
+    if (!msVideos[idx]) return;
+
+    if (msBlobUrl) {
+      URL.revokeObjectURL(msBlobUrl);
+      msBlobUrl = null;
+    }
+
+    if (placeholder) placeholder.style.display = 'none';
+    if (playerWrap) playerWrap.style.display = 'block';
+    if (progressBar) progressBar.style.display = 'block';
+    if (statusText) statusText.textContent = '加载中…';
+    if (videoEl) videoEl.src = '';
+
+    fetch(msVideos[idx].file)
+      .then(function(res) { return res.blob(); })
+      .then(function(blob) {
+        msBlobUrl = URL.createObjectURL(blob);
+        if (videoEl) {
+          videoEl.src = msBlobUrl;
+          videoEl.play().catch(function() {
+            if (statusText) statusText.textContent = '点击播放';
+          });
+        }
+        if (statusText) statusText.textContent = msVideos[idx].name;
+      })
+      .catch(function(err) {
+        if (statusText) statusText.textContent = '视频加载失败（需部署后访问）';
+        if (placeholder) { placeholder.style.display = 'flex'; playerWrap.style.display = 'none'; }
+      });
+
+    if (videoEl) {
+      videoEl.ontimeupdate = function() {
+        var fill = document.getElementById('ms-progress-fill');
+        if (fill && videoEl.duration) {
+          fill.style.width = (videoEl.currentTime / videoEl.duration * 100) + '%';
+        }
+      };
+      videoEl.onended = function() {
+        var fill = document.getElementById('ms-progress-fill');
+        if (fill) fill.style.width = '0%';
+      };
+    }
+  };
+
+  if (msVideos.length > 0) {
+    setTimeout(function() {
+      var firstThumb = document.querySelector('#ms-thumbs .video-thumb');
+      msLoadVideo(0, firstThumb);
+    }, 100);
+  }
+})();
+</scr`+`ipt>`;
+}
+
+function buildPlanningContent() {
+  var planningFiles = [
+    {
+      id: 0,
+      name: '异业合作创意案',
+      icon: '🤝',
+      pdfFile: 'planning-01.pdf',
+      hasPdf: true,
+      pages: [
+        {
+          title: '异业合作创意案 · 第1页',
+          content: `
+            <h3>一、项目概述</h3>
+            <p>本方案聚焦品牌与异业伙伴的跨界合作，通过资源置换、联合推广等方式，实现双方用户群体的相互渗透与品牌价值提升。</p>
+            <h3>二、合作对象选择策略</h3>
+            <ul>
+              <li>用户画像高度重合但品类无直接竞争关系</li>
+              <li>品牌调性匹配，合作边界清晰</li>
+              <li>异业伙伴具备可复用的线下/线上资源</li>
+            </ul>
+            <h3>三、创意方向</h3>
+            <p>核心策略：「场景融合 × 双向赋能」</p>
+            <p>找到双方品牌的重叠使用场景，以此为切入点设计联合内容，让双方用户在自然情境中接触对方品牌信息，降低抵触感，提升好感度。</p>
+          `
+        },
+        {
+          title: '异业合作创意案 · 第2页',
+          content: `
+            <h3>四、执行规划</h3>
+            <ul>
+              <li>Phase 1：联合物料设计（品牌视觉融合）</li>
+              <li>Phase 2：双微一抖同步发布，KOL联合种草</li>
+              <li>Phase 3：线下快闪/事件营销，制造话题热度</li>
+            </ul>
+            <h3>五、效果预期</h3>
+            <p>预计曝光量 XXX万，互动率提升 X%，新增用户 XX% 来自异业渠道引流。</p>
+            <p style="color:#999;font-size:10px;margin-top:16px;">📎 实际方案截图：上传后替换此处内容</p>
+          `
+        }
+      ]
+    },
+    {
+      id: 1,
+      name: '视频创意案',
+      icon: '🎬',
+      pdfFile: 'planning-02.pdf',
+      hasPdf: true,
+      pages: [
+        {
+          title: '视频创意案 · 第1页',
+          content: `
+            <h3>一、创意背景</h3>
+            <p>在内容消费碎片化时代，视频是触达用户最有效的内容形态。本方案针对品牌核心卖点，设计系列化短视频创意，实现内容深度与传播广度的平衡。</p>
+            <h3>二、核心创意概念</h3>
+            <p>「XXXX」—— 用一句话统领全系列视频调性，建立系列感与辨识度。</p>
+            <h3>三、视频系列规划</h3>
+            <ul>
+              <li>种草向：产品功能演示 / 使用场景</li>
+              <li>故事向：用户真实故事 / 品牌理念传达</li>
+              <li>话题向：社会情绪借势 / 节日节点营销</li>
+            </ul>
+          `
+        },
+        {
+          title: '视频创意案 · 第2页',
+          content: `
+            <h3>四、制作规格</h3>
+            <ul>
+              <li>时长：15-60秒（按平台适配）</li>
+              <li>画面风格：统一视觉语言，每支独立完整</li>
+              <li>AI辅助：提示词脚本 → 视觉抽卡 → 剪辑成片</li>
+            </ul>
+            <h3>五、排期与渠道</h3>
+            <p>配合产品上新节奏，分三波发布：预热期 / 爆发期 / 长尾期，覆盖抖音、小红书、视频号等平台。</p>
+            <p style="color:#999;font-size:10px;margin-top:16px;">📎 实际方案截图：上传后替换此处内容</p>
+          `
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: '物料创意案',
+      icon: '📋',
+      pdfFile: 'planning-03.pdf',
+      hasPdf: true,
+      pages: [
+        {
+          title: '物料创意案 · 第1页',
+          content: `
+            <h3>一、物料矩阵规划</h3>
+            <p>围绕品牌全年传播节点，梳理线上/线下物料需求，建立统一的设计语言体系，确保各触点视觉一致性。</p>
+            <h3>二、线上物料</h3>
+            <ul>
+              <li>社交媒体：海报、长图、动态Banner</li>
+              <li>电商详情页：主视觉、卖点图、对比图</li>
+              <li>EDM / Push：邮件头图、通知Banner</li>
+            </ul>
+            <h3>三、线下物料</h3>
+            <ul>
+              <li>活动KV：主视觉 + 系列延展</li>
+              <li>印刷品：DM单、易拉宝、X展架</li>
+              <li>陈列物料：终端POP、堆头装饰</li>
+            </ul>
+          `
+        },
+        {
+          title: '物料创意案 · 第2页',
+          content: `
+            <h3>四、AI提效方案</h3>
+            <p>使用Midjourney生成物料概念图，豆包辅助文案批量产出，设计团队聚焦精细化执行，整体效率提升约40%。</p>
+            <h3>五、视觉规范</h3>
+            <p>建立品牌视觉规范手册（VI简版），包含：主色调 / 辅助色 / 字体规范 / 图像风格 / 禁忌项，确保各供应商执行一致性。</p>
+            <p style="color:#999;font-size:10px;margin-top:16px;">📎 实际方案截图：上传后替换此处内容</p>
+          `
+        }
+      ]
+    },
+    {
+      id: 3,
+      name: '新品上市策略案',
+      icon: '🚀',
+      pdfFile: 'planning-04.pdf',
+      hasPdf: true,
+      pages: [
+        {
+          title: '新品上市策略案 · 第1页',
+          content: `
+            <h3>一、市场洞察</h3>
+            <p>通过对目标市场的竞争格局、消费者需求、渠道分布进行系统分析，找到新品的差异化定位空间。</p>
+            <h3>二、新品定位</h3>
+            <p>核心策略：「差异化占位 × 场景切入」</p>
+            <ul>
+              <li>目标人群：XXX岁，XXX场景下的XXX痛点</li>
+              <li>核心卖点：TOP3，按重要程度排序</li>
+              <li>价格策略：竞品对标 + 价值感塑造</li>
+            </ul>
+          `
+        },
+        {
+          title: '新品上市策略案 · 第2页',
+          content: `
+            <h3>三、上市节奏</h3>
+            <ul>
+              <li>Pre-launch（上市前4周）：悬念预热，KOL种草</li>
+              <li>Launch（上市第1-2周）：集中爆发，多渠道覆盖</li>
+              <li>Maintain（上市后）：持续种草 + 用户口碑运营</li>
+            </ul>
+            <h3>四、预算分配建议</h3>
+            <p>达人种草 XX% | 付费投放 XX% | 事件营销 XX% | 渠道激励 XX%</p>
+            <p style="color:#999;font-size:10px;margin-top:16px;">📎 实际方案截图：上传后替换此处内容</p>
+          `
+        }
+      ]
+    }
+  ];
+
+  var fileGridHtml = planningFiles.map(function(f) {
+    return '<div class="planning-file-item" onclick="openPlanningFile(' + f.id + ')">' +
+           '<div class="planning-file-icon">' + f.icon + '</div>' +
+           '<div class="planning-file-label">' + f.name + '</div>' +
+           '</div>';
+  }).join('');
+
+  var pdfPreviewHtml = planningFiles.map(function(f) {
+    var pagesHtml = f.pages.map(function(page) {
+      return '<div class="planning-pdf-page">' +
+             '<div class="planning-pdf-page-header">📄 ' + page.title + '</div>' +
+             '<div class="planning-pdf-page-body">' + page.content + '</div>' +
+             '<div class="planning-pdf-page-header" style="background:#f8f8f8;border-top:1px solid #ddd;">📎 附件截图区</div>' +
+             '<div class="planning-pdf-page-img" onclick="alert(\'上传方案截图后在此展示，支持PNG/JPG\')">' +
+             '<div class="pdf-icon">🖼️</div>' +
+             '<div>点击上传方案截图</div>' +
+             '<div class="pdf-hint">推荐尺寸：800 × 450px</div>' +
+             '</div>' +
+             '</div>';
+    }).join('');
+    return '<div class="planning-pdf-view" id="planning-pdf-' + f.id + '" style="display:none;height:100%;">' +
+           '<div class="planning-pdf-header">' +
+           '<button class="back-btn" onclick="backToPlanningList()">◀ 返回</button>' +
+           '<span class="planning-pdf-title">' + f.icon + ' ' + f.name + '</span>' +
+           '</div>' +
+           '<div class="planning-pdf-body">' + pagesHtml + '</div>' +
+           '</div>';
+  }).join('');
+
+  return '<div class="planning-container" id="planning-container">' +
+    '<div class="planning-toolbar">' +
+      '<span style="font-size:11px;color:#444;">📁 部分策划案</span>' +
+      '<div style="flex:1"></div>' +
+      '<span style="font-size:10px;color:#666;">双击打开文件查看</span>' +
+    '</div>' +
+    '<!-- 文件列表视图 -->' +
+    '<div class="planning-body" id="planning-list-view">' +
+      '<div class="planning-file-grid">' + fileGridHtml + '</div>' +
+    '</div>' +
+    '<!-- PDF预览视图 -->' +
+    pdfPreviewHtml +
+  '</div>' +
+  '<scr' + 'ipt>' +
+  '(function() {' +
+    'var planningFiles = ' + JSON.stringify(planningFiles) + ';' +
+    'window.openPlanningFile = function(id) {' +
+      'var listView = document.getElementById("planning-list-view");' +
+      'if (listView) listView.style.display = "none";' +
+      'var pdfView = document.getElementById("planning-pdf-" + id);' +
+      'if (pdfView) pdfView.style.display = "flex";' +
+    '};' +
+    'window.backToPlanningList = function() {' +
+      'var listView = document.getElementById("planning-list-view");' +
+      'if (listView) listView.style.display = "block";' +
+      'var allPdf = document.querySelectorAll(".planning-pdf-view");' +
+      'allPdf.forEach(function(el) { el.style.display = "none"; });' +
+    '};' +
+  '})();' +
+  '</scr' + 'ipt>';
+}
+
+function buildResumeContent() {
+  return `<div class="resume-content">
+<h2>基本信息</h2>
+<p>李诗韵 · 1995年 · 13031120915 · carolineshiyunli@163.com</p>
+<p><strong>学历：</strong>广告学本科 + RMIT皇家墨尔本理工大学 广告学硕士</p>
+
+<h2>工作经历</h2>
+<div class="job">
+  <div class="job-title">医脉通 · 创意综合部 · 创意文案 Creative Copy</div>
+  <div class="job-meta">2024年Q4 — 2025年</div>
+  <ul>
+    <li>主导医疗行业比稿竞标，推动礼来、第一三共等重点项目中标落地</li>
+    <li>AI生成KV直接中标（第一三共DB06），压缩比稿周期约60%</li>
+    <li>负责舒利迭全年20期长图，内容高质稳定，助力2026年客户续约</li>
+  </ul>
+</div>
+<div class="job">
+  <div class="job-title">自由职业 · 独立创意顾问（项目制）</div>
+  <div class="job-meta">2024年Q1 — 2024年Q3</div>
+  <ul>
+    <li>服务大众集团PR、长安汽车、京东等客户</li>
+    <li>主导京东多业务板块竞标全案策略与成案输出</li>
+  </ul>
+</div>
+<div class="job">
+  <div class="job-title">医疗行业广告公司 · 策划 Planning</div>
+  <div class="job-meta">2023年 — 2024年</div>
+  <ul>
+    <li>AM转型策划，服务罗氏、拜耳等医疗客户</li>
+    <li>同期开始系统使用Midjourney，建立AI辅助创意工作方法</li>
+  </ul>
+</div>
+<div class="job">
+  <div class="job-title">蓝色光标 · 快消品事业部 · SAE</div>
+  <div class="job-meta">2020年 — 2023年</div>
+  <ul>
+    <li>客策创一体，服务伊利、强生、达能、中粮等快消客户</li>
+    <li>负责脉动、家佳康等品牌平面物料与全案执行</li>
+  </ul>
+</div>
+
+<h2>AI创意能力</h2>
+<ul>
+  <li>2023年起系统使用Midjourney，精通提示词工程</li>
+  <li>2024年起延伸至短视频：含提示词的AI分镜脚本 → 指导后期抽卡剪辑</li>
+  <li>工信部AI人工智能训练技术（初级）证书</li>
+</ul>
+
+<h2>证书</h2>
+<ul>
+  <li>工信部 AI人工智能训练技术（初级）</li>
+  <li>国家版权局 音乐作品著作权登记证书 ×3</li>
+</ul>
+</div>`;
+}
+
+const MUSIC_TRACKS = [
+  {
+    title: '写给荒野',
+    artist: '李冒冒',
+    duration: '2:51',
+    seconds: 171,
+    album: '此后，写给荒野',
+    file: 'track-01.mp3'
+  },
+  {
+    title: '01# lost in the CROWN',
+    artist: '李冒冒',
+    duration: '3:05',
+    seconds: 185,
+    album: '梦核墨尔本',
+    file: 'track-02.m4a'
+  },
+  {
+    title: '南雅拉',
+    artist: '李冒冒',
+    duration: '2:36',
+    seconds: 156,
+    album: '南雅拉',
+    file: 'track-03.mp3'
+  }
+];
+
+function formatTime(sec) {
+  var m = Math.floor(sec / 60);
+  var s = Math.floor(sec % 60);
+  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+function buildMusicContent() {
+  var listHtml = MUSIC_TRACKS.map(function(t, i) {
+    return '<div class="track-item" data-index="' + i + '" ondblclick="playTrack(' + i + ')">' +
+           '<span class="track-num">' + String(i + 1).padStart(2, '0') + '</span>' +
+           '<span class="track-title">' + t.title + '</span>' +
+           '<span class="track-duration">' + t.duration + '</span>' +
+           '</div>';
+  }).join('');
+
+  return '<div class="music-player">' +
+    '<div class="mp-toolbar">' +
+      '<span style="font-size:11px;color:#444;">&#127925; Windows Media Player</span>' +
+      '<div style="display:flex;gap:4px;margin-left:auto;">' +
+        '<button class="mp-tb-btn" title="最小化" onclick="minimizeWindow(\'music\')">_</button>' +
+        '<button class="mp-tb-btn" title="最大化" onclick="maximizeWindow(\'music\')">&#9633;</button>' +
+        '<button class="mp-tb-btn close" onclick="closeWindow(\'music\')" title="关闭">&#10005;</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="mp-main">' +
+      '<div class="mp-cover-area">' +
+        '<div class="mp-cover" id="mp-cover">' +
+          '<div style="font-size:48px;margin-bottom:8px;">&#127928;</div>' +
+          '<div style="font-size:10px;color:#888;" id="mp-cover-hint">李冒冒</div>' +
+        '</div>' +
+        '<div class="mp-progress-bar" id="mp-progress-bar" onclick="seekTrack(event)">' +
+          '<div class="mp-progress-fill" id="mp-progress-fill"></div>' +
+        '</div>' +
+        '<div class="mp-time-display" id="mp-time-display">00:00 / 00:00</div>' +
+      '</div>' +
+      '<div class="mp-playlist">' +
+        '<div class="mp-playlist-header">&#128203; 播放列表 &middot; 李冒冒</div>' +
+        '<div class="mp-playlist-body" id="mp-playlist-body">' + listHtml + '</div>' +
+        '<div class="mp-playlist-footer">分享歌手李冒冒 https://163cn.tv/50RWhJ5 (@网易云音乐)</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="mp-controls">' +
+      '<div class="mp-ctrl-btn" onclick="prevTrack()" title="上一曲">&#9664;&#9664;</div>' +
+      '<div class="mp-ctrl-btn mp-play-btn" onclick="togglePlay()" title="播放/暂停">' +
+        '<span id="mp-play-icon">&#9654;</span>' +
+      '</div>' +
+      '<div class="mp-ctrl-btn" onclick="nextTrack()" title="下一曲">&#9654;&#9654;</div>' +
+      '<div class="mp-ctrl-volume"><span>&#128266;</span><div class="mp-vol-slider"><div style="width:60%;height:4px;background:#0f0;"></div></div></div>' +
+      '<div class="mp-ctrl-info" id="mp-now-playing">未播放</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function buildContactContent() {
+  return `<div class="notepad-content">
+<pre style="font-family:'Courier New',monospace;font-size:12px;line-height:1.8;white-space:pre-wrap;">
+============================================
+  联系方式 · Contact
+============================================
+
+姓名：李诗韵 · Caroline Li
+
+📱 手机：13031120915（优先，VX同手机号）
+
+📧 邮箱：carolineshiyunli@163.com
+
+💼 求职方向：
+   创意 / 文案 /  策划
+   广告公司 · 互联网公司 · 品牌方均可
+
+🌟 特别擅长：
+   · AI辅助创意（提示词生图 / AI短视频脚本/创意文案）
+   · 比稿竞标 · 全案策略 · 需求拆解
+   · 医疗大健康 · 快消 · 互联网
+
+
+  期待与你的连接 ✉
+
+============================================
+</pre></div>`;
+}
+
+function buildNotepadContent() {
+  return `<div class="notepad-content">
+<textarea style="width:100%;height:200px;border:none;outline:none;font-family:'Courier New',monospace;font-size:12px;resize:none;padding:4px;" placeholder="在此输入..."></textarea>
+</div>`;
+}
+
+function buildPropertiesContent() {
+  return `<div style="font-size:11px;padding:8px;">
+  <div style="display:flex;gap:0;border-bottom:2px solid #808080;margin-bottom:8px;">
+    <div style="padding:4px 12px;background:#c0c0c0;border:2px outset #c0c0c0;border-bottom:none;cursor:pointer;">背景</div>
+    <div style="padding:4px 12px;cursor:pointer;">屏幕保护程序</div>
+    <div style="padding:4px 12px;cursor:pointer;">外观</div>
+  </div>
+  <p><strong>桌面主题：</strong>Caroline OS 千禧复古版</p>
+  <p><strong>分辨率：</strong>1024 × 768</p>
+  <p><strong>颜色深度：</strong>16位真彩色</p>
+  <p><strong>系统：</strong>Caroline OS · Creative Edition 1995</p>
+  <p><strong>版本：</strong>Build 2026.04</p>
+  <p><strong>注册用户：</strong>李诗韵 · Caroline Li</p>
+  <div style="margin-top:16px;display:flex;justify-content:flex-end;gap:6px;">
+    <button style="border:2px outset #c0c0c0;background:#c0c0c0;padding:3px 16px;font-size:11px;cursor:pointer;" onclick="closeWindow('properties')">确定</button>
+    <button style="border:2px outset #c0c0c0;background:#c0c0c0;padding:3px 16px;font-size:11px;cursor:pointer;" onclick="closeWindow('properties')">取消</button>
+  </div>
+</div>`;
+}
+
+// ===================== DIALOGS =====================
+function showShutdownDialog() {
+  hideStartMenu();
+  const d = document.createElement('div');
+  d.className = 'win-dialog';
+  d.style.cssText = 'width:340px;left:50%;top:50%;transform:translate(-50%,-50%);';
+  d.innerHTML = `
+    <div class="win-titlebar" style="cursor:default;">
+      <span class="win-title-icon">⚠️</span>
+      <span class="win-title-text">关闭 Windows</span>
+    </div>
+    <div class="dialog-body">
+      <div class="dialog-icon">🖥️</div>
+      <div class="dialog-text">
+        <p>您希望对您的计算机做什么？</p>
+        <br>
+        <p>🔴 关闭计算机</p>
+        <p>🔄 重新启动计算机</p>
+      </div>
+    </div>
+    <div class="dialog-btns">
+      <button class="dialog-btn" onclick="this.closest('.win-dialog').remove()">确定</button>
+      <button class="dialog-btn" onclick="this.closest('.win-dialog').remove()">取消</button>
+      <button class="dialog-btn" onclick="showBSOD();this.closest('.win-dialog').remove()">重新启动</button>
+    </div>
+  `;
+  document.body.appendChild(d);
+}
+
+// ===================== BSOD =====================
+function showBSOD() {
+  document.getElementById('bsod').style.display = 'flex';
+}
+document.getElementById('bsod').addEventListener('keydown', reboot);
+document.getElementById('bsod').addEventListener('click', reboot);
+document.getElementById('bsod').setAttribute('tabindex','0');
+function reboot() {
+  document.getElementById('bsod').style.display = 'none';
+  runBoot();
+}
+
+// ===================== BOOT SEQUENCE =====================
+var bootMessages = [
+  "Starting Windows...",
+  "Loading CREATIVE.SYS...",
+  "Initializing PORTFOLIO.DLL...",
+  "Loading AI_TOOLS.EXE...",
+  "Checking MIDJOURNEY.DRV... OK",
+  "Mounting PROJECTS volume...",
+  "Loading 6 years of experience...",
+  "Applying creative patches...",
+  "Almost ready..."
+];
+
+function runBoot() {
+  var bootScreen = document.getElementById('boot-screen');
+  var bootBar = document.getElementById('boot-bar');
+  var bootMsg = document.getElementById('boot-msg');
+  var desktop = document.getElementById('desktop');
+  var taskbar = document.getElementById('taskbar');
+
+  bootScreen.style.display = 'flex';
+  desktop.style.display = 'none';
+  taskbar.style.display = 'none';
+  bootBar.style.width = '0%';
+
+  var step = 0;
+  var total = bootMessages.length;
+
+  function tick() {
+    if (step >= total) {
+      bootScreen.style.transition = 'opacity 0.3s';
+      bootScreen.style.opacity = '0';
+      setTimeout(function() {
+        bootScreen.style.display = 'none';
+        desktop.style.display = 'block';
+        taskbar.style.display = 'flex';
+        buildDesktopIcons();
+        openWindow('about');
+        openWindow('projects');
+        initAudioForBgMusic();
+      }, 300);
+      return;
+    }
+    bootMsg.textContent = bootMessages[step];
+    bootBar.style.width = ((step + 1) / total * 100) + '%';
+    step++;
+    setTimeout(tick, 280);
+  }
+  tick();
+}
+
+// ===================== INIT =====================
+function initAudioForBgMusic() {
+  if (!audioElement) {
+    audioElement = document.createElement('audio');
+    audioElement.loop = true;
+    audioElement.volume = 0.4;
+  }
+  var bgTrack = MUSIC_TRACKS[1];
+  if (bgTrack) {
+    audioElement.src = bgTrack.file;
+    audioElement.play().catch(function() {});
+    isPlaying = true;
+    updatePlayIcon();
+    var coverHint = document.getElementById('mp-cover-hint');
+    var nowPlaying = document.getElementById('mp-now-playing');
+    if (coverHint) coverHint.textContent = bgTrack.title;
+    if (nowPlaying) nowPlaying.textContent = bgTrack.artist + ' - ' + bgTrack.title;
+    var items = document.querySelectorAll('.track-item');
+    items.forEach(function(el, i) {
+      el.classList.toggle('playing', i === 1);
+    });
+    currentTrackIndex = 1;
+    var fill = document.getElementById('mp-progress-fill');
+    var timeDisplay = document.getElementById('mp-time-display');
+    if (fill) fill.style.width = '0%';
+    if (timeDisplay) timeDisplay.textContent = '00:00 / ' + bgTrack.duration;
+  }
+}
+window.addEventListener('load', function() {
+  runBoot();
+  drawBlissWallpaper();
+});
+
+// ===================== BLISS WALLPAPER (Pixel Art) =====================
+function drawBlissWallpaper() {
+  const canvas = document.getElementById('bliss-wallpaper');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const PX = 3;
+
+  const skyTop = '#3A9DDE';
+  const skyBot = '#87CEEB';
+
+  for (let y = 0; y < H * 0.55; y += PX) {
+    const t = y / (H * 0.55);
+    const r = Math.round(lerp(58, 135, t));
+    const g = Math.round(lerp(157, 206, t));
+    const b = Math.round(lerp(222, 235, t));
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    ctx.fillRect(0, y, W, PX);
+  }
+
+  drawPixelCloud(ctx, W * 0.08, H * 0.08, 80, PX);
+  drawPixelCloud(ctx, W * 0.25, H * 0.15, 60, PX);
+  drawPixelCloud(ctx, W * 0.55, H * 0.06, 100, PX);
+  drawPixelCloud(ctx, W * 0.75, H * 0.18, 70, PX);
+  drawPixelCloud(ctx, W * 0.92, H * 0.10, 55, PX);
+
+  const grassTop = Math.floor(H * 0.50);
+
+  ctx.fillStyle = '#6BBF3B';
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  for (let x = 0; x <= W; x += PX) {
+    const nx = x / W;
+    const y = grassTop + Math.sin(nx * Math.PI * 1.5) * 60 + Math.sin(nx * Math.PI * 3.2) * 25 + Math.sin(nx * Math.PI * 0.8) * 40;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W, H);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = '#4CAF50';
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  for (let x = 0; x <= W; x += PX) {
+    const nx = x / W;
+    const y = grassTop + 30 + Math.sin(nx * Math.PI * 2.2 + 1) * 50 + Math.sin(nx * Math.PI * 4.5) * 20 + Math.sin(nx * Math.PI * 1.1) * 30;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W, H);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = '#3D8B40';
+  ctx.beginPath();
+  ctx.moveTo(0, H);
+  for (let x = 0; x <= W; x += PX) {
+    const nx = x / W;
+    const y = grassTop + 60 + Math.sin(nx * Math.PI * 1.8 + 2) * 35 + Math.sin(nx * Math.PI * 3.8) * 15 + Math.cos(nx * Math.PI * 2.5) * 25;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(W, H);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = '#2E7D32';
+  ctx.fillRect(0, H * 0.88, W, H * 0.12);
+
+  ctx.fillStyle = 'rgba(0,0,0,0.04)';
+  for (let y = 0; y < H; y += 2) {
+    ctx.fillRect(0, y, W, 1);
+  }
+}
+
+function drawPixelCloud(ctx, cx, cy, size, px) {
+  const levels = [
+    { dx: 0, dy: 0, w: 1.0, h: 0.6 },
+    { dx: -0.35, dy: 0.2, w: 0.5, h: 0.5 },
+    { dx: 0.35, dy: 0.15, w: 0.55, h: 0.5 },
+  ];
+  levels.forEach(lv => {
+    const w = size * lv.w;
+    const h = size * lv.h;
+    const x = cx + lv.dx * size;
+    const y = cy + lv.dy * size;
+    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+    for (let py = -h/2; py < h/2; py += px) {
+      const t = (py + h/2) / h;
+      const ww = Math.sqrt(t * (1 - t)) * w * 0.8;
+      ctx.fillRect(Math.round((x - ww) / px) * px, Math.round(y + py), Math.ceil(ww * 2 / px) * px, px);
+    }
+  });
+}
+
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+// ===================== MUSIC PLAYER =====================
+var currentTrackIndex = -1;
+var isPlaying = false;
+var audioElement = null;
+var simulateTimer = null;
+var simulatedSeconds = 0;
+
+function playTrack(index) {
+  currentTrackIndex = index;
+  var track = MUSIC_TRACKS[index];
+
+  var items = document.querySelectorAll('.track-item');
+  items.forEach(function(el, i) {
+    el.classList.toggle('playing', i === index);
+  });
+
+  var coverHint = document.getElementById('mp-cover-hint');
+  var nowPlaying = document.getElementById('mp-now-playing');
+  if (coverHint) coverHint.textContent = track.title;
+  if (nowPlaying) nowPlaying.textContent = track.artist + ' - ' + track.title;
+
+  if (audioElement) {
+    audioElement.src = track.file;
+    audioElement.play();
+    isPlaying = true;
+    updatePlayIcon();
+  } else {
+    isPlaying = true;
+    simulatedSeconds = 0;
+    updatePlayIcon();
+    simulateProgress();
+  }
+}
+
+function togglePlay() {
+  if (currentTrackIndex === -1) {
+    playTrack(0);
+  } else {
+    isPlaying = !isPlaying;
+    updatePlayIcon();
+    if (isPlaying) {
+      simulateProgress();
+    } else {
+      if (simulateTimer) {
+        clearInterval(simulateTimer);
+        simulateTimer = null;
+      }
+    }
+  }
+}
+
+function updatePlayIcon() {
+  var icon = document.getElementById('mp-play-icon');
+  if (icon) icon.innerHTML = isPlaying ? '&#9208;' : '&#9654;';
+}
+
+function prevTrack() {
+  if (currentTrackIndex > 0) {
+    playTrack(currentTrackIndex - 1);
+  }
+}
+
+function nextTrack() {
+  if (currentTrackIndex < MUSIC_TRACKS.length - 1) {
+    playTrack(currentTrackIndex + 1);
+  }
+}
+
+function seekTrack(event) {
+  var bar = document.getElementById('mp-progress-bar');
+  if (!bar || currentTrackIndex === -1) return;
+  var rect = bar.getBoundingClientRect();
+  var percent = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+  var track = MUSIC_TRACKS[currentTrackIndex];
+  var newTime = Math.floor(track.seconds * percent);
+  var timeDisplay = document.getElementById('mp-time-display');
+  var fill = document.getElementById('mp-progress-fill');
+  if (timeDisplay) timeDisplay.textContent = formatTime(newTime) + ' / ' + track.duration;
+  if (fill) fill.style.width = (percent * 100) + '%';
+}
+
+function simulateProgress() {
+  if (simulateTimer) clearInterval(simulateTimer);
+  if (!isPlaying) return;
+
+  simulateTimer = setInterval(function() {
+    if (!isPlaying || currentTrackIndex === -1) {
+      clearInterval(simulateTimer);
+      simulateTimer = null;
+      return;
+    }
+    var track = MUSIC_TRACKS[currentTrackIndex];
+    simulatedSeconds = (simulatedSeconds % track.seconds) + 1;
+    var percent = simulatedSeconds / track.seconds * 100;
+    var fill = document.getElementById('mp-progress-fill');
+    var timeDisplay = document.getElementById('mp-time-display');
+    if (fill) fill.style.width = percent + '%';
+    if (timeDisplay) timeDisplay.textContent = formatTime(simulatedSeconds) + ' / ' + track.duration;
+
+    if (simulatedSeconds >= track.seconds) {
+      if (currentTrackIndex < MUSIC_TRACKS.length - 1) {
+        playTrack(currentTrackIndex + 1);
+      } else {
+        isPlaying = false;
+        updatePlayIcon();
+        simulatedSeconds = 0;
+        clearInterval(simulateTimer);
+        simulateTimer = null;
+      }
+    }
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
